@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آنیک | دستیار هوشمند حقوقی</title>
+
+    <!-- Font: Vazirmatn -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        /* --- CSS VARIABLES & RESET (Based on UI Kit) --- */
+        :root {
+            --color-primary: #1A3A5F; /* Blue Lapis */
+            --color-secondary: #4A90E2; /* Sky Blue */
+            --color-bg: #F9FAFB; /* Paper White */
+            --color-white: #FFFFFF;
+            --color-success: #27AE60;
+            --color-warning: #F39C12;
+            --color-text: #333333;
+            --color-text-light: #666666;
+            --color-border: #E5E7EB;
+
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3, h4 {
+            color: var(--color-primary);
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        h1 { font-size: 1.8rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p { margin-bottom: var(--spacing-sm); color: var(--color-text-light); }
+
+        a { text-decoration: none; color: var(--color-secondary); transition: 0.3s; cursor: pointer; }
+        a:hover { color: var(--color-primary); }
+
+        /* --- LAYOUT COMPONENTS --- */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        header {
+            background-color: var(--color-white);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span { color: var(--color-secondary); }
+
+        main {
+            flex: 1;
+            padding: var(--spacing-lg) 0;
+            padding-bottom: 80px; /* Space for disclaimer */
+        }
+
+        /* --- VIEWS / SECTIONS --- */
+        .view {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- UI COMPONENTS --- */
+        .card {
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-md);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background-color: #152c48; }
+
+        .btn-secondary {
+            background-color: var(--color-white);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+        }
+        .btn-secondary:hover { background-color: #f0f4f8; }
+
+        .btn-success {
+            background-color: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .input-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        /* --- LANDING PAGE --- */
+        .hero {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .feature-card {
+            background: var(--color-white);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+            display: block;
+        }
+
+        /* --- DASHBOARD / SELECTION --- */
+        .crime-selector {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media(min-width: 600px) {
+            .crime-selector { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .crime-option {
+            background: var(--color-white);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .crime-option:hover, .crime-option.selected {
+            border-color: var(--color-secondary);
+            background-color: rgba(74, 144, 226, 0.05);
+        }
+
+        .crime-option.selected .crime-icon {
+            color: var(--color-secondary);
+        }
+
+        .crime-icon { font-size: 2.5rem; margin-bottom: 0.5rem; display: block; color: var(--color-text-light); }
+
+        /* --- CHAT INTERFACE --- */
+        .chat-container {
+            background: var(--color-white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+        }
+
+        .chat-history {
+            flex: 1;
+            padding: var(--spacing-md);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            position: relative;
+            line-height: 1.5;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .msg-bot {
+            align-self: flex-start;
+            background-color: #F3F4F6;
+            color: var(--color-text);
+            border-bottom-right-radius: 2px;
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background-color: var(--color-secondary);
+            color: var(--color-white);
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+            background: var(--color-white);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .typing-indicator {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            margin-left: 10px;
+            display: none;
+        }
+
+        /* --- RESULT PAGE --- */
+        .result-section {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            background: var(--color-white);
+        }
+
+        .result-section h3 {
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .legal-text-content {
+            white-space: pre-wrap;
+            font-family: 'Times New Roman', serif; /* Formal font for documents */
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: justify;
+            color: #000;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* --- DISCLAIMER (STICKY FOOTER) --- */
+        .disclaimer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #FFF3CD;
+            color: #856404;
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.85rem;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-top: 1px solid #ffeeba;
+        }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            body { background: white; -webkit-print-color-adjust: exact; }
+            header, .disclaimer-bar, .result-actions, .chat-container, .btn, #view-landing, #view-login, #view-dashboard { display: none !important; }
+            main { padding: 0; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            .view.active { display: block !important; }
+            .result-section { border: none; box-shadow: none; padding: 0; margin: 0 0 2rem 0; }
+            .legal-text-content { font-size: 12pt; direction: rtl; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DISCLAIMER STICKY BAR -->
+    <div class="disclaimer-bar">
+        <span>⚠️</span>
+        <span>سامانه آنیک وکیل دادگستری نیست و صرفاً پیش‌نویس اوراق قضایی را بر اساس اظهارات شما تنظیم می‌کند.</span>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                آنیک <span>| دستیار هوشمند حقوقی</span>
+            </div>
+            <div id="user-status" class="hidden">
+                <span style="font-size:0.9rem; color: var(--color-text-light);">کاربر مهمان</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- VIEW 1: LANDING PAGE -->
+        <section id="view-landing" class="view active">
+            <div class="hero">
+                <h1>تنظیم شکواییه در کمتر از ۵ دقیقه</h1>
+                <p>بدون نیاز به مراجعه حضوری، با هوش مصنوعی حقوقی آنیک، پیش‌نویس قانونی خود را به صورت رایگان دریافت کنید.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🤝</span>
+                    <h3>خیانت در امانت</h3>
+                    <p>تنظیم شکواییه بر اساس ماده ۶۷۴ قانون مجازات اسلامی</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🗣️</span>
+                    <h3>توهین و فحاشی</h3>
+                    <p>پیگیری حقوقی بر اساس مواد ۶۰۸ و ۶۰۹</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📞</span>
+                    <h3>مزاحمت تلفنی</h3>
+                    <p>شکایت از مزاحمت بر اساس مواد ۶۴۱ و ۶۱۹</p>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <h2>چگونه کار می‌کند؟</h2>
+                <p style="text-align: right; margin-bottom: 1.5rem;">
+                    ۱. ورود با شماره موبایل<br>
+                    ۲. تعریف داستان و مصاحبه هوشمند<br>
+                    ۳. دریافت پیش‌نویس رایگان
+                </p>
+                <button class="btn btn-primary" style="max-width: 300px;" onclick="app.navigateTo('view-login')">شروع رایگان</button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: LOGIN / OTP -->
+        <section id="view-login" class="view">
+            <div class="card" style="max-width: 400px; margin: 2rem auto;">
+                <h2 class="text-center">ورود / ثبت‌نام</h2>
+                <p class="text-center">برای محافظت از اطلاعات، لطفاً شماره خود را وارد کنید.</p>
+
+                <div id="login-step-1">
+                    <div class="input-group">
+                        <label>شماره موبایل</label>
+                        <input type="tel" id="mobile-input" class="input-field" placeholder="09123456789" maxlength="11">
+                    </div>
+                    <button class="btn btn-primary" onclick="app.requestOTP()">دریافت کد تایید</button>
+                    <div class="text-center mt-4">
+                        <a onclick="app.navigateTo('view-landing')" style="font-size: 0.9rem;">بازگشت به خانه</a>
+                    </div>
+                </div>
+
+                <div id="login-step-2" class="hidden">
+                    <div class="input-group">
+                        <label>کد تایید (تستی: 1234)</label>
+                        <input type="number" id="otp-input" class="input-field" placeholder="- - - -" maxlength="4">
+                    </div>
+                    <button class="btn btn-primary" onclick="app.verifyOTP()">ورود به پنل</button>
+                    <button class="btn btn-secondary mt-4" onclick="app.resetLogin()">تغییر شماره</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: DASHBOARD (INITIAL DISCOVERY) -->
+        <section id="view-dashboard" class="view">
+            <div class="card">
+                <h2>سلام! چه کمکی از من ساخته است؟</h2>
+                <p>لطفاً موضوع و داستان کلی خود را به زبان ساده بیان کنید تا بتوانم شما را راهنمایی کنم.</p>
+
+                <div class="input-group">
+                    <textarea id="initial-story" class="input-field" rows="4" placeholder="مثلاً: یه ماشین رو به دوستم قرض دادم ولی اون ماشین رو فروخته و پولش رو نمیده..."></textarea>
+                </div>
+            </div>
+
+            <h3>نوع موضوع را دقیق‌تر انتخاب کنید:</h3>
+            <div class="crime-selector">
+                <div class="crime-option" onclick="app.selectCrime('betrayal', this)">
+                    <span class="crime-icon">🤝</span>
+                    <h4>خیانت در امانت</h4>
+                    <p style="font-size: 0.8rem;">مال، چک، سفته، خودرو</p>
+                </div>
+                <div class="crime-option" onclick="app.selectCrime('insult', this)">
+                    <span class="crime-icon">🗣️</span>
+                    <h4>توهین و افترا</h4>
+                    <p style="font-size: 0.8rem;">مجازی، حضوری، فحاشی</p>
+                </div>
+                <div class="crime-option" onclick="app.selectCrime('harassment', this)">
+                    <span class="crime-icon">📞</span>
+                    <h4>مزاحمت</h4>
+                    <p style="font-size: 0.8rem;">تلفنی، پیامکی، خیابانی</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button id="start-chat-btn" class="btn btn-primary" disabled onclick="app.startChat()">شروع مصاحبه هوشمند</button>
+            </div>
+        </section>
+
+        <!-- VIEW 4: CHAT INTERFACE -->
+        <section id="view-chat" class="view">
+            <div class="chat-container">
+                <div class="chat-history" id="chat-box">
+                    <!-- Messages will be injected here -->
+                </div>
+                <div class="typing-indicator" id="typing-indicator">آنیک در حال نوشتن...</div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" class="input-field" placeholder="پاسخ شما..." onkeypress="app.handleChatEnter(event)">
+                    <button class="btn btn-primary" style="width: auto;" onclick="app.sendUserMessage()">ارسال</button>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-secondary" style="width: auto;" onclick="app.navigateTo('view-dashboard')">بازگشت</button>
+            </div>
+        </section>
+
+        <!-- VIEW 5: RESULT & DOCUMENT -->
+        <section id="view-result" class="view">
+            <div class="card" style="background-color: #E8F5E9; border-color: var(--color-success);">
+                <h2 style="color: var(--color-success);">پردازش اطلاعات تکمیل شد</h2>
+                <p>بر اساس اظهارات شما، پیش‌نویس زیر تنظیم گردیده است.</p>
+                <p style="font-size: 0.9rem;"><strong>تذکر:</strong> لطفاً متن را با دقت مطالعه کرده و در صورت نیاز ویرایش کنید.</p>
+            </div>
+
+            <!-- SECTION 1: COMPLAINT DOCUMENT (SHAKVAIEH) -->
+            <div class="result-section" id="section-complaint">
+                <h3>📄 متن شکواییه (قابل ارائه به دادسرا)</h3>
+                <div class="legal-text-content" id="complaint-text">
+                    <!-- Dynamic Content -->
+                </div>
+                <div class="result-actions">
+                    <button class="btn btn-success" onclick="app.downloadPDF('section-complaint')">دانلود / چاپ شکواییه</button>
+                    <button class="btn btn-secondary" onclick="app.copyText('complaint-text')">کپی متن</button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: LEGAL CONSULTATION -->
+            <div class="result-section" id="section-consultation">
+                <h3>⚖️ نکات مشاوره حقوقی (اطلاعاتی)</h3>
+                <div class="legal-text-content" id="consultation-text" style="font-family: 'Vazirmatn', sans-serif; font-size: 1rem;">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>مدارک مورد نیاز هنگام مراجعه:</h3>
+                <ul style="padding-right: 20px; color: var(--color-text-light);">
+                    <li>اصل کارت ملی و شناسنامه</li>
+                    <li>مدارک مثبته دعوی (پیامک، قرارداد، رسید)</li>
+                    <li>استعلام آدرس دقیق طرف مقابل (از پلیس+۱۰)</li>
+                </ul>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-primary" onclick="location.reload()">پرونده جدید</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const app = {
+            state: {
+                currentView: 'view-landing',
+                mobile: '',
+                crimeType: null, // betrayal, insult, harassment
+                userData: {},
+                chatHistory: [],
+                step: 0
+            },
+
+            // --- NAVIGATION ---
+            navigateTo: function(viewId) {
+                // Hide all views
+                document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+                // Show target view
+                document.getElementById(viewId).classList.add('active');
+                this.state.currentView = viewId;
+                window.scrollTo(0, 0);
+            },
+
+            // --- LOGIN LOGIC ---
+            requestOTP: function() {
+                const mobileInput = document.getElementById('mobile-input');
+                const mobile = mobileInput.value;
+                const mobileRegex = /^09\d{9}$/;
+
+                if (!mobileRegex.test(mobile)) {
+                    this.showToast('لطفاً شماره موبایل معتبر وارد کنید', 'error');
+                    return;
+                }
+
+                this.state.mobile = mobile;
+                document.getElementById('login-step-1').classList.add('hidden');
+                document.getElementById('login-step-2').classList.remove('hidden');
+                this.showToast('کد تایید ارسال شد: 1234', 'success');
+            },
+
+            verifyOTP: function() {
+                const otp = document.getElementById('otp-input').value;
+                if (otp === '1234') {
+                    this.showToast('ورود موفقیت آمیز', 'success');
+                    document.getElementById('user-status').classList.remove('hidden');
+                    document.getElementById('user-status').innerHTML = `<span style="font-weight:bold">${this.state.mobile}</span>`;
+                    this.navigateTo('view-dashboard');
+                } else {
+                    this.showToast('کد اشتباه است', 'error');
+                }
+            },
+
+            resetLogin: function() {
+                document.getElementById('login-step-1').classList.remove('hidden');
+                document.getElementById('login-step-2').classList.add('hidden');
+                document.getElementById('otp-input').value = '';
+            },
+
+            // --- DASHBOARD LOGIC ---
+            selectCrime: function(type, element) {
+                // UI Toggle
+                document.querySelectorAll('.crime-option').forEach(el => el.classList.remove('selected'));
+                element.classList.add('selected');
+
+                this.state.crimeType = type;
+                document.getElementById('start-chat-btn').disabled = false;
+            },
+
+            startChat: function() {
+                if (!this.state.crimeType) return;
+
+                const story = document.getElementById('initial-story').value;
+                if (story.length < 10) {
+                    this.showToast('لطفاً داستان خود را به صورت خلاصه بنویسید', 'error');
+                    return;
+                }
+
+                this.state.userData['story'] = story;
+                this.navigateTo('view-chat');
+                this.initChat();
+            },
+
+            // --- CHAT BOT LOGIC ---
+            initChat: function() {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML = ''; // Clear previous
+
+                // Initial Bot Message
+                let introMsg = "";
+                if (this.state.crimeType === 'betrayal') introMsg = "برای تنظیم شکواییه خیانت در امانت، لطفاً به سوالات زیر پاسخ دهید. آیا قرارداد کتبی یا سند رسمی (مانند رسید) مبنی بر امانت بودن مال دارید؟";
+                else if (this.state.crimeType === 'insult') introMsg = "برای پرونده توهین: آیا توهین در حضور شاهود انجام شده است؟ همچنین، آیا توهین مشمول فحاشی ناموسی بوده است؟";
+                else if (this.state.crimeType === 'harassment') introMsg = "آیا مزاحمت تلفنی بوده است یا حضوری؟ لطفاً شماره طرف مقابل یا محل وقوع را بفرمایید.";
+
+                this.addBotMessage(introMsg);
+                this.state.step = 1;
+            },
+
+            handleChatEnter: function(e) {
+                if (e.key === 'Enter') this.sendUserMessage();
+            },
+
+            sendUserMessage: function() {
+                const input = document.getElementById('chat-input');
+                const text = input.value.trim();
+                if (!text) return;
+
+                // Add User Message
+                this.addMessage(text, 'user');
+                this.state.userData[`answer_${this.state.step}`] = text;
+                input.value = '';
+
+                // Simulate Bot Thinking
+                document.getElementById('typing-indicator').style.display = 'block';
+                this.scrollToBottom();
+
+                setTimeout(() => {
+                    this.processNextStep(text);
+                    document.getElementById('typing-indicator').style.display = 'none';
+                }, 1000);
+            },
+
+            addMessage: function(text, sender) {
+                const div = document.createElement('div');
+                div.className = `message ${sender === 'bot' ? 'msg-bot' : 'msg-user'}`;
+                div.innerText = text;
+                document.getElementById('chat-box').appendChild(div);
+                this.scrollToBottom();
+            },
+
+            addBotMessage: function(text) {
+                this.addMessage(text, 'bot');
+            },
+
+            scrollToBottom: function() {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.scrollTop = chatBox.scrollHeight;
+            },
+
+            processNextStep: function(userAnswer) {
+                this.state.step++;
+
+                // Simple State Machine for Prototype
+                if (this.state.step === 2) {
+                    // Ask Date and Location
+                    this.addBotMessage("تاریخ دقیق وقوع جرم و محل آن (شهر/محله) را بنویسید.");
+                } else if (this.state.step === 3) {
+                    // Ask Accused Details
+                    this.addBotMessage("نام و نام خانوادگی طرف مقابل (متهم) را بنویسید. اگر نمی‌دانید بنویسید 'ناشناس'.");
+                } else if (this.state.step === 4) {
+                    // Final Check
+                    this.addBotMessage("آیا شاکی دیگری نیز در این پرونده وجود دارد؟ (بله/خیر)");
+                } else {
+                    // End of Chat
+                    this.addBotMessage("اطلاعات شما دریافت شد. در حال تنظیم پیش‌نویس...");
+                    setTimeout(() => {
+                        this.generateDocument();
+                    }, 1500);
+                }
+            },
+
+            // --- DOCUMENT GENERATION ---
+            generateDocument: function() {
+                const date = new Date().toLocaleDateString('fa-IR');
+                const crimeTypeMap = {
+                    'betrayal': { title: 'شکواییه خیانت در امانت', article: 'ماده ۶۷۴ قانون مجازات اسلامی' },
+                    'insult': { title: 'شکواییه توهین', article: 'ماده ۶۰۸ قانون مجازات اسلامی' },
+                    'harassment': { title: 'شکواییه مزاحمت', article: 'ماده ۶۴۱ قانون مجازات اسلامی' }
+                };
+
+                const info = crimeTypeMap[this.state.crimeType];
+                const answers = this.state.userData;
+
+                // 1. Generate Complaint Text
+                const complaintText = `ریاست محترم دادسرای عمومی و انقلاب موضوع: ${info.title}
+
+با سلام و احترام
+اینجانب ${this.state.mobile} به نشانی [آدرس شاکی]، به استحضار می‌رساند که در تاریخ ${answers.answer_2 || '...'}، شخصی بنام ${answers.answer_3 || 'ناشناس'} اقدام به ${this.state.crimeType === 'betrayal' ? 'تصاحب و استرداد نکردن مال امانی' : 'توهین و ایذاء'} بنموده است.
+
+شرح وقوع:
+ ${answers.story}
+
+مستندات:
+ ${answers.answer_1 || 'پیامک‌ها و شهود'}
+
+از آنجا که عمل فوق مصداق ${info.article} می‌باشد، خواهش استریخت دستور فرمایید نسبت به صدور کیفرخواست و تعقیب مرتکب اقدام لازم مبذول گردد.
+
+با تشکر
+امضاء: ${this.state.mobile}
+تاریخ: ${date}`;
+
+                document.getElementById('complaint-text').innerText = complaintText;
+
+                // 2. Generate Consultation Text
+                let consultText = "";
+                if (this.state.crimeType === 'betrayal') {
+                    consultText = "۱. طبق قانون، اثبات «قصد ضرر» (سوءنیت) در خیانت در امانت بسیار مهم است. اگر طرف مقابل ادعای قرض یا بدهی دارد، ممکن است پرونده از جنبه کیفری خارج و به حقوقی برود.\n\n۲. اگر قبل از شکایت کیفری، «اظهارنامه رسمی» ارسال کرده باشید، سوءنیت او بهتر اثبات می‌شود.";
+                } else if (this.state.crimeType === 'insult') {
+                    consultText = "۱. اگر توهین در فضای مجازی بوده، پرینت از صفحه و فیلترنام کاربری ضروری است.\n\n۲. توجه داشته باشید که جرح و ضرب و شتم جدا از توهین است و می‌توانید هر دو را همزمان شکایت کنید.";
+                } else {
+                    consultText = "۱. برای مزاحمت تلفنی، حتماً باید «استعلام شماره» از اپراتور (همراه اول/ایرانسل) بگیرید تا مالک خط مشخص شود.\n\n۲. اگر مزاحمت برای کودک یا بانوان باشد، مجازات مشددتر خواهد بود.";
+                }
+
+                document.getElementById('consultation-text').innerText = consultText;
+
+                this.navigateTo('view-result');
+            },
+
+            // --- UTILITIES ---
+            showToast: function(message, type) {
+                const toast = document.createElement('div');
+                const bgColor = type === 'error' ? '#DC2626' : (type === 'success' ? '#27AE60' : '#1A3A5F');
+                toast.style.cssText = `
+                    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+                    background: ${bgColor}; color: white; padding: 10px 20px;
+                    border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    z-index: 2000; font-size: 0.9rem;
+                `;
+                toast.innerText = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            },
+
+            copyText: function(elementId) {
+                const text = document.getElementById(elementId).innerText;
+                navigator.clipboard.writeText(text).then(() => {
+                    this.showToast('متن کپی شد', 'success');
+                });
+            },
+
+            downloadPDF: function(elementId) {
+                // Triggers browser print dialog.
+                // The @media print CSS ensures only the specific section is shown nicely.
+                window.print();
+            }
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if there is a saved session logic could go here
+        });
+    </script>
+</body>
+</html>

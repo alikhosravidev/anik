@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آنیک - تنظیم رایگان شکوائیه</title>
+    <meta name="description" content="تنظیم هوشمند و رایگان شکوائیه برای جرایم خیانت در امانت، توهین و مزاحمت">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1A3A5F',
+                        secondary: '#4A90E2',
+                        success: '#27AE60',
+                        warning: '#F39C12',
+                        bgpaper: '#F9FAFB',
+                    },
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Vazirmatn Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; }
+        .chat-bubble-bot { background:#e5e7eb; align-self: flex-start; }
+        .chat-bubble-user { background:#1A3A5F; color:white; align-self: flex-end; }
+        .crime-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F9FAFB] flex flex-col">
+
+<!-- Disclaimer Sticky Footer -->
+<div class="fixed bottom-0 left-0 right-0 bg-[#FFF3CD] text-center py-2 text-sm text-[#333] z-50 border-t border-orange-300">
+    ⚠️ این سامانه وکیل دادگستری نیست و صرفاً پیش‌نویس اوراق قضایی را تنظیم می‌کند. مسئولیت صحت اطلاعات با شماست.
+</div>
+
+<!-- Landing Page -->
+<div id="landing" class="flex-1 flex flex-col justify-center items-center px-6 text-center">
+    <h1 class="text-4xl font-bold text-primary mb-6">آنیک</h1>
+    <p class="text-xl text-gray-700 mb-8 max-w-2xl">تنظیم هوشمند و رایگان شکوائیه برای جرایم<br>خیانت در امانت ▪ توهین ▪ مزاحمت</p>
+    <p class="text-lg text-gray-600 mb-12">در کمتر از ۵ دقیقه شکوائیه حرفه‌ای دریافت کنید</p>
+    <button onclick="showSection('login')" class="bg-primary hover:bg-[#0f2a45] text-white text-xl font-bold py-6 px-12 rounded-2xl shadow-2xl transition">
+        تنظیم رایگان شکوائیه
+    </button>
+</div>
+
+<!-- Login / OTP -->
+<div id="login" class="hidden flex-1 flex flex-col justify-center items-center px-6">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+        <h2 class="text-2xl font-bold text-primary mb-6 text-center">ورود با شماره موبایل</h2>
+        <div id="phoneStep">
+            <input type="tel" id="phone" placeholder="۰۹۱۲۳۴۵۶۷۸۹" class="w-full border border-gray-300 rounded-xl px-5 py-4 text-lg text-left" dir="ltr">
+            <button onclick="sendOTP()" class="mt-6 bg-primary text-white w-full py-4 rounded-xl font-bold text-lg">دریافت کد تایید</button>
+        </div>
+        <div id="otpStep" class="hidden">
+            <p class="text-sm text-gray-600 mb-4">کد ارسال‌شده به شماره <span id="sentPhone"></span> را وارد کنید</p>
+            <input type="text" id="otp" maxlength="5" placeholder="-----" class="w-full border border-gray-300 rounded-xl px-5 py-4 text-center text-2xl tracking-widest" dir="ltr">
+            <button onclick="verifyOTP()" class="mt-6 bg-success text-white w-full py-4 rounded-xl font-bold text-lg">ورود و شروع</button>
+        </div>
+    </div>
+</div>
+
+<!-- Chat Interface -->
+<div id="chat" class="hidden flex-1 flex flex-col bg-[#F9FAFB]">
+    <div class="flex-1 overflow-y-auto px-4 py-6" id="chatMessages">
+        <!-- Messages injected here -->
+    </div>
+
+    <div class="bg-white border-t border-gray-200 p-4">
+        <div id="quickReplies" class="flex flex-wrap gap-3 justify-center"></div>
+        <div id="textInputArea" class="hidden">
+            <input type="text" id="textInput" class="w-full border rounded-xl px-5 py-4" placeholder="پاسخ شما...">
+            <button onclick="sendText()" class="bg-primary text-white px-6 py-3 rounded-xl mr-2">ارسال</button>
+        </div>
+    </div>
+</div>
+
+<!-- Result / Download -->
+<div id="result" class="hidden flex-1 flex flex-col items-center px-6 py-12">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl">
+        <h2 class="text-2xl font-bold text-success text-center mb-8">شکوائیه شما آماده است!</h2>
+        <div id="documentPreview" class="bg-gray-50 border-2 border-dashed rounded-xl p-8 text-center min-h-96">
+            پیش‌نمایش سند...
+        </div>
+        <div class="mt-8 flex justify-center gap-6">
+            <button onclick="downloadPDF()" class="bg-primary text-white py-4 px-10 rounded-xl font-bold">دانلود PDF</button>
+            <button onclick="downloadWord()" class="bg-secondary text-white py-4 px-10 rounded-xl font-bold">دانلود Word</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script>
+    // Simple state
+    let currentStep = 0;
+    let userData = {};
+    let phoneNumber = '';
+
+    const steps = [
+        // 0: Welcome + Crime selection
+        { type: 'bot', text: 'با سلام. لطفاً نوع مشکل خود را انتخاب کنید:',
+            options: [
+                {text: '🤝 خیانت در امانت (خودرو، چک، سفته...)', value: 'amanat'},
+                {text: '🗣️ توهین و فحاشی (فضای مجازی یا حقیقی)', value: 'tohin'},
+                {text: '📞 مزاحمت تلفنی یا حضوری', value: 'mozahemat'}
+            ]},
+
+        // خیانت در امانت branch
+        { type: 'bot', text: 'آیا مال یا پولی به طرف مقابل داده‌اید که قرار بود عین آن را برگرداند؟', options: ['بله', 'خیر'], branch: 'amanat1' },
+        { type: 'bot', text: 'آیا مدرک مکتوب (رسید، پیامک، قرارداد) دارید؟', options: ['بله', 'خیر'], branch: 'amanat2' },
+
+        // توهین branch
+        { type: 'bot', text: 'آیا توهین ناموسی یا رکیک بوده است؟', options: ['بله', 'خیر'], branch: 'tohin1' },
+        { type: 'bot', text: 'آیا توهین به کارمند دولت در حین انجام وظیفه بوده؟', options: ['بله', 'خیر'], branch: 'tohin2' },
+
+        // Lead generation
+        { type: 'lead', text: 'متأسفانه موضوع شما در حال حاضر خارج از محدوده خدمات رایگان ماست. برای مشاوره تخصصی، شماره موبایل خود را وارد کنید تا همکاران ما با شما تماس بگیرند.' },
+
+        // Final questions (generic)
+        { type: 'bot', text: 'تاریخ دقیق یا تقریبی وقوع جرم؟', input: 'date' },
+        { type: 'bot', text: 'محل وقوع جرم (شهر و خیابان)؟', input: 'text' },
+        { type: 'bot', text: 'نام و نام‌خانوادگی متهم را می‌دانید؟', options: ['بله', 'خیر'] },
+        { type: 'bot', text: 'لطفاً نام متهم را وارد کنید (در صورت ناشناس بودن بنویسید: ناشناس)', input: 'text' },
+    ];
+
+    function showSection(section) {
+        document.querySelectorAll('#landing, #login, #chat, #result').forEach(el => el.classList.add('hidden'));
+        document.getElementById(section).classList.remove('hidden');
+    }
+
+    function addMessage(text, type = 'bot', options = null) {
+        const container = document.getElementById('chatMessages');
+        const bubble = document.createElement('div');
+        bubble.className = `max-w-xs lg:max-w-md px-5 py-4 rounded-2xl my-3 ${type==='user' ? 'chat-bubble-user' : 'chat-bubble-bot'}`;
+        bubble.innerHTML = text;
+        container.appendChild(bubble);
+        container.scrollTop = container.scrollHeight;
+
+        if (options) {
+            const qr = document.getElementById('quickReplies');
+            qr.innerHTML = '';
+            options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-gray-200 hover:bg-gray-300 px-6 py-3 rounded-full text-sm font-medium';
+                btn.textContent = typeof opt === 'object' ? opt.text : opt;
+                btn.onclick = () => userReply(typeof opt === 'object' ? opt.value : opt);
+                qr.appendChild(btn);
+            });
+        } else {
+            document.getElementById('quickReplies').innerHTML = '';
+        }
+    }
+
+    function userReply(value) {
+        addMessage(value, 'user');
+        userData[`step${currentStep}`] = value;
+        nextStep();
+    }
+
+    function sendText() {
+        const input = document.getElementById('textInput');
+        if (!input.value.trim()) return;
+        userReply(input.value);
+        input.value = '';
+        document.getElementById('textInputArea').classList.add('hidden');
+    }
+
+    function nextStep() {
+        currentStep++;
+        const step = steps[currentStep];
+        if (!step) {
+            // End of flow → Result
+            generateDocument();
+            return;
+        }
+
+        if (step.input) {
+            document.getElementById('textInputArea').classList.remove('hidden');
+            document.getElementById('textInput').focus();
+            addMessage(step.text);
+            return;
+        }
+
+        if (step.type === 'lead') {
+            addMessage(step.text);
+            document.getElementById('textInputArea').classList.remove('hidden');
+            return;
+        }
+
+        // Simple branching example
+        if (currentStep === 1 && userData.step0 === 'amanat' && userData.step1 === 'خیر') {
+            currentStep = steps.findIndex(s => s.type === 'lead');
+            nextStep();
+            return;
+        }
+
+        addMessage(step.text, 'bot', step.options || null);
+    }
+
+    function startChat() {
+        showSection('chat');
+        currentStep = -1;
+        userData = {};
+        document.getElementById('chatMessages').innerHTML = '';
+        addMessage('با سلام. جهت تنظیم شکوائیه به سوالات زیر پاسخ دهید.');
+        nextStep();
+    }
+
+    function sendOTP() {
+        phoneNumber = document.getElementById('phone').value;
+        if (!/^09[0-9]{9}$/.test(phoneNumber)) {
+            alert('شماره موبایل معتبر نیست');
+            return;
+        }
+        document.getElementById('sentPhone').textContent = phoneNumber;
+        document.getElementById('phoneStep').classList.add('hidden');
+        document.getElementById('otpStep').classList.remove('hidden');
+        // Simulate OTP send
+        console.log('OTP sent to ' + phoneNumber);
+    }
+
+    function verifyOTP() {
+        const otp = document.getElementById('otp').value;
+        if (otp.length !== 5) {
+            alert('کد تایید ۵ رقمی است');
+            return;
+        }
+        // Simulate success
+        startChat();
+    }
+
+    function generateDocument() {
+        // Simple template population
+        const docText = `ریاست محترم دادسرا
+احتراماً در تاریخ ${userData.step5 || '...'} در محل ${userData.step6 || '...'}، مشتکی‌عنه به نام ${userData.step8 || 'ناشناس'} اقدام به ${userData.step0 === 'amanat' ? 'خیانت در امانت (ماده ۶۷۴)' : userData.step0 === 'tohin' ? 'توهین' : 'مزاحمت'} نمود...`;
+
+        document.getElementById('documentPreview').innerText = docText;
+        showSection('result');
+
+        window.docContent = docText; // for PDF
+    }
+
+    function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFont('Vazirmatn', 'normal'); // fallback
+        doc.text(window.docContent || 'شکوائیه', 10, 10);
+        doc.save('شکوائیه-آنیک.pdf');
+    }
+
+    function downloadWord() {
+        const content = '<html><body dir="rtl"><pre>' + (window.docContent || 'شکوائیه') + '</pre></body></html>';
+        const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'شکوائیه-آنیک.doc';
+        a.click();
+    }
+</script>
+</body>
+</html>

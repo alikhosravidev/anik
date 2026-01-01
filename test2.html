@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آنیک | دستیار هوشمند حقوقی</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Vazirmatn Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+    <!-- Configuration based on UI Kit -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1A3A5F',   // Navy Blue - Authority
+                        secondary: '#4A90E2', // Sky Blue - Tech
+                        background: '#F9FAFB', // Paper White
+                        success: '#27AE60',
+                        warning: '#F39C12',
+                        text: '#333333',
+                        'warning-bg': '#FFF3CD'
+                    },
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                        serif: ['B Nazanin', 'serif'], // Simulated for documents
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles for Document Paper Feel */
+        .paper-shadow {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .legal-paper {
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* Hide scrollbar for cleaner chat */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Fade in animation */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-background text-text font-sans antialiased min-h-screen flex flex-col">
+
+<!-- Sticky Disclaimer (UI Kit Requirement) -->
+<div class="bg-warning-bg text-orange-900 px-4 py-2 text-xs md:text-sm text-center border-b border-warning sticky top-0 z-50 shadow-sm flex items-center justify-center gap-2">
+    <i class="fas fa-exclamation-triangle text-warning"></i>
+    <span>این سامانه وکیل دادگستری نیست و صرفاً پیش‌نویس اوراق قضایی را تنظیم می‌کند.</span>
+</div>
+
+<!-- Header -->
+<header class="bg-primary text-white shadow-md relative z-40">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                <i class="fas fa-scale-balanced text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight">آنیک</h1>
+                <p class="text-[10px] text-gray-300">دستیار هوشمند حقوقی</p>
+            </div>
+        </div>
+        <nav class="hidden md:flex gap-6 text-sm">
+            <a href="#" onclick="app.navigate('home')" class="hover:text-secondary transition">صفحه اصلی</a>
+            <a href="#" class="hover:text-secondary transition">راهنما</a>
+            <a href="#" class="hover:text-secondary transition">قوانین</a>
+        </nav>
+        <div id="auth-status">
+            <button onclick="app.navigate('login')" class="bg-secondary hover:bg-blue-600 text-white px-5 py-2 rounded-lg text-sm transition shadow-lg shadow-blue-900/20">
+                ورود / ثبت نام
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content Area -->
+<main id="app-container" class="flex-grow container mx-auto px-4 py-6 relative">
+    <!-- Views will be injected here by JS -->
+</main>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-gray-200 mt-auto">
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-gray-600">
+            <div>
+                <h3 class="font-bold text-primary mb-3">درباره آنیک</h3>
+                <p class="leading-relaxed">آنیک یک ابزار هوشمند برای تنظیم خودکار شکواییه و اوراق قضایی است که با هدف کاهش هزینه‌های حقوقی و تسهیل دسترسی به عدالت طراحی شده است.</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-primary mb-3">دسترسی سریع</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-secondary">دفاتر خدمات قضایی</a></li>
+                    <li><a href="#" class="hover:text-secondary">سامانه ثنا</a></li>
+                    <li><a href="#" class="hover:text-secondary">سوالات متداول</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-primary mb-3">نماد اعتماد</h3>
+                <div class="flex gap-4">
+                    <div class="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-center">نماد الکترونیک</div>
+                    <div class="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-center">ساماندهی</div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-xs text-gray-400 mt-8 pt-4 border-t">
+            © ۱۴۰۴ تمامی حقوق برای آنیک محفوظ است.
+        </div>
+    </div>
+</footer>
+
+<!-- Application Logic -->
+<script>
+    const app = {
+        state: {
+            view: 'home', // home, login, otp, dashboard, triage, result
+            user: null,
+            crimeType: null, // 'trust', 'insult', 'harassment'
+            formData: {},
+            chatHistory: []
+        },
+
+        // Views Configuration
+        views: {
+            // 1. Landing Page
+            home: `
+                    <div class="max-w-4xl mx-auto fade-in">
+                        <div class="text-center py-12 md:py-20">
+                            <h2 class="text-3xl md:text-5xl font-bold text-primary mb-6 leading-tight">
+                                تنظیم شکواییه حقوقی، <br/>
+                                <span class="text-secondary">دقیق، سریع و هوشمند</span>
+                            </h2>
+                            <p class="text-gray-600 text-lg mb-10 max-w-2xl mx-auto">
+                                بدون نیاز به دانش حقوقی، در کمتر از ۵ دقیقه مشکل خود را مطرح کنید و متن کامل شکواییه را دریافت نمایید.
+                            </p>
+                            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                                <button onclick="app.navigate('login')" class="bg-primary hover:bg-slate-800 text-white text-lg px-8 py-4 rounded-xl shadow-xl transition transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                                    <span>شروع تنظیم شکواییه</span>
+                                    <i class="fas fa-arrow-left mt-1"></i>
+                                </button>
+                                <button class="bg-white border border-gray-300 text-gray-700 text-lg px-8 py-4 rounded-xl hover:bg-gray-50 transition">
+                                    چگونه کار می‌کند؟
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Services Grid -->
+                        <div class="grid md:grid-cols-3 gap-6 mt-12">
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                                <div class="w-12 h-12 bg-blue-100 text-secondary rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-file-contract text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2 text-primary">تنظیم دادخواست و شکواییه</h3>
+                                <p class="text-gray-500 text-sm leading-relaxed">تولید متن‌های حقوقی استاندارد بر اساس آخرین قوانین مجازات اسلامی.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-robot text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2 text-primary">مشاوره هوشمند</h3>
+                                <p class="text-gray-500 text-sm leading-relaxed">تحلیل مشکل شما توسط هوش مصنوعی و پیشنهاد بهترین راهکار قانونی.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                                <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-print text-xl"></i>
+                                </div>
+                                <h3 class="font-bold text-lg mb-2 text-primary">خروجی قابل چاپ</h3>
+                                <p class="text-gray-500 text-sm leading-relaxed">دریافت فایل PDF و Word آماده برای ارائه به دفاتر خدمات قضایی.</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+
+            // 2. Login Page
+            login: `
+                    <div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg border border-gray-100 fade-in">
+                        <div class="text-center mb-8">
+                            <h3 class="text-2xl font-bold text-primary">ورود به پنل کاربری</h3>
+                            <p class="text-gray-500 text-sm mt-2">برای شروع، شماره موبایل خود را وارد کنید</p>
+                        </div>
+                        <form onsubmit="app.handleLogin(event)">
+                            <div class="mb-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">شماره موبایل</label>
+                                <div class="relative">
+                                    <input type="tel" placeholder="0912..." class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary text-left ltr" required pattern="09[0-9]{9}">
+                                    <i class="fas fa-mobile-alt absolute right-3 top-3.5 text-gray-400"></i>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-900/20">
+                                دریافت کد تایید
+                            </button>
+                        </form>
+                        <p class="text-center text-xs text-gray-400 mt-6">ثبت نام شما به معنای پذیرش <a href="#" class="text-secondary">قوانین و مقررات</a> است.</p>
+                    </div>
+                `,
+
+            // 3. OTP Page
+            otp: `
+                    <div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-2xl shadow-lg border border-gray-100 fade-in">
+                        <div class="text-center mb-8">
+                            <h3 class="text-2xl font-bold text-primary">کد تایید را وارد کنید</h3>
+                            <p class="text-gray-500 text-sm mt-2">کد ۴ رقمی به شماره شما ارسال شد</p>
+                        </div>
+                        <form onsubmit="app.handleOtp(event)">
+                            <div class="flex justify-center gap-4 mb-8" dir="ltr">
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:border-secondary focus:ring-1 focus:ring-secondary" autofocus oninput="this.nextElementSibling?.focus()">
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:border-secondary focus:ring-1 focus:ring-secondary" oninput="this.nextElementSibling?.focus()">
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:border-secondary focus:ring-1 focus:ring-secondary" oninput="this.nextElementSibling?.focus()">
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border rounded-lg focus:border-secondary focus:ring-1 focus:ring-secondary" oninput="app.submitOtpIfFull()">
+                            </div>
+                            <button type="submit" class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-900/20">
+                                ورود به سیستم
+                            </button>
+                        </form>
+                        <div class="text-center mt-6">
+                            <button onclick="app.navigate('login')" class="text-sm text-gray-500 hover:text-primary">تغییر شماره</button>
+                        </div>
+                    </div>
+                `,
+
+            // 4. Dashboard (Tell Story)
+            dashboard: `
+                    <div class="max-w-3xl mx-auto fade-in">
+                        <div class="bg-white rounded-2xl shadow-md p-6 md:p-10 border border-gray-100">
+                            <div class="flex items-center gap-4 mb-6 border-b pb-4">
+                                <div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-800">خوش آمدید</h2>
+                                    <p class="text-gray-500 text-sm">برای شروع، مشکل حقوقی خود را انتخاب کنید یا داستان خود را بنویسید.</p>
+                                </div>
+                            </div>
+
+                            <!-- Crime Selector (Based on UI Kit) -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                <button onclick="app.startTriage('trust')" class="p-4 border border-gray-200 rounded-xl hover:border-secondary hover:bg-blue-50 transition text-right group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="font-bold text-gray-700 group-hover:text-primary">خیانت در امانت</span>
+                                        <i class="fas fa-handshake text-gray-400 group-hover:text-secondary"></i>
+                                    </div>
+                                    <p class="text-xs text-gray-500">ماشین، چک، سفته، وسایل</p>
+                                </button>
+                                <button onclick="app.startTriage('insult')" class="p-4 border border-gray-200 rounded-xl hover:border-secondary hover:bg-blue-50 transition text-right group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="font-bold text-gray-700 group-hover:text-primary">توهین و فحاشی</span>
+                                        <i class="fas fa-comments text-gray-400 group-hover:text-secondary"></i>
+                                    </div>
+                                    <p class="text-xs text-gray-500">پیامک، حضوری، مجازی</p>
+                                </button>
+                                <button onclick="app.startTriage('harassment')" class="p-4 border border-gray-200 rounded-xl hover:border-secondary hover:bg-blue-50 transition text-right group">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="font-bold text-gray-700 group-hover:text-primary">مزاحمت</span>
+                                        <i class="fas fa-phone-slash text-gray-400 group-hover:text-secondary"></i>
+                                    </div>
+                                    <p class="text-xs text-gray-500">تلفنی، بانوان، اطفال</p>
+                                </button>
+                            </div>
+
+                            <div class="relative">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div class="w-full border-t border-gray-200"></div>
+                                </div>
+                                <div class="relative flex justify-center text-sm">
+                                    <span class="px-2 bg-white text-gray-500">یا شرح دهید</span>
+                                </div>
+                            </div>
+
+                            <form onsubmit="app.analyzeStory(event)" class="mt-6">
+                                <label class="block text-gray-700 font-bold mb-2">داستان خود را کوتاه بنویسید</label>
+                                <textarea id="storyInput" class="w-full h-32 p-4 border border-gray-300 rounded-xl focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary resize-none" placeholder="مثال: ماشینم را به دوستم قرض دادم ولی پس نمی‌دهد..."></textarea>
+                                <button type="submit" class="mt-4 bg-secondary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition flex items-center gap-2 mr-auto">
+                                    <span>بررسی هوشمند</span>
+                                    <i class="fas fa-magic"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                `,
+
+            // 5. Triage Chatbot
+            triage: `
+                    <div class="max-w-3xl mx-auto h-[600px] flex flex-col bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden fade-in">
+                        <!-- Chat Header -->
+                        <div class="bg-primary text-white p-4 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">دستیار حقوقی آنیک</h3>
+                                    <p class="text-xs text-gray-300 opacity-80">در حال تنظیم پیش‌نویس...</p>
+                                </div>
+                            </div>
+                            <button onclick="app.navigate('dashboard')" class="text-white/80 hover:text-white">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Chat Messages -->
+                        <div id="chat-messages" class="flex-grow p-6 overflow-y-auto space-y-4 bg-gray-50 custom-scrollbar">
+                            <!-- Messages injected via JS -->
+                        </div>
+
+                        <!-- Input Area -->
+                        <div class="p-4 bg-white border-t border-gray-200">
+                            <form onsubmit="app.handleChatSubmit(event)" class="flex gap-2">
+                                <input type="text" id="chatInput" class="flex-grow px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-primary" placeholder="پاسخ خود را بنویسید..." autocomplete="off">
+                                <button type="submit" class="bg-primary text-white w-12 h-12 rounded-xl flex items-center justify-center hover:bg-slate-800 transition shadow-md">
+                                    <i class="fas fa-paper-plane rtl:rotate-180"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                `,
+
+            // 6. Result Page
+            result: `
+                    <div class="max-w-4xl mx-auto fade-in pb-10">
+                        <!-- Success Banner -->
+                        <div class="bg-success text-white p-6 rounded-2xl shadow-md mb-8 flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold">شکواییه شما با موفقیت آماده شد!</h2>
+                                <p class="text-sm opacity-90">اکنون می‌توانید متن زیر را دانلود کرده و به دفتر خدمات قضایی مراجعه کنید.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <!-- Document Preview -->
+                            <div class="md:col-span-2">
+                                <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden paper-shadow">
+                                    <div class="bg-gray-100 px-6 py-3 border-b border-gray-200 flex justify-between items-center">
+                                        <span class="font-bold text-gray-700">پیش‌نمایش سند</span>
+                                        <div class="flex gap-2">
+                                            <button onclick="alert('دانلود PDF (شبیه‌سازی)')" class="text-xs bg-white border border-gray-300 px-3 py-1 rounded text-red-600 hover:bg-red-50">
+                                                <i class="fas fa-file-pdf mr-1"></i> PDF
+                                            </button>
+                                            <button onclick="alert('دانلود Word (شبیه‌سازی)')" class="text-xs bg-white border border-gray-300 px-3 py-1 rounded text-blue-600 hover:bg-blue-50">
+                                                <i class="fas fa-file-word mr-1"></i> Word
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- The Document Content -->
+                                    <div class="p-8 md:p-12 legal-paper min-h-[500px] text-justify leading-loose" id="document-content">
+                                        <!-- Content injected by JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sidebar / Next Steps -->
+                            <div class="space-y-6">
+                                <!-- Steps Card -->
+                                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                    <h3 class="font-bold text-primary mb-4 border-b pb-2">مراحل بعدی</h3>
+                                    <ul class="space-y-4 text-sm">
+                                        <li class="flex gap-3">
+                                            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">۱</span>
+                                            <span class="text-gray-600">ثبت نام در سامانه ثنا (اگر عضو نیستید)</span>
+                                        </li>
+                                        <li class="flex gap-3">
+                                            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">۲</span>
+                                            <span class="text-gray-600">پرینت شکواییه و مدارک</span>
+                                        </li>
+                                        <li class="flex gap-3">
+                                            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">۳</span>
+                                            <span class="text-gray-600">مراجعه به دفتر خدمات قضایی</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Required Docs -->
+                                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                    <h3 class="font-bold text-primary mb-4 border-b pb-2">مدارک مورد نیاز</h3>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li class="flex items-center gap-2"><i class="fas fa-id-card text-secondary"></i> کارت ملی</li>
+                                        <li class="flex items-center gap-2"><i class="fas fa-credit-card text-secondary"></i> کارت بانکی (هزینه دادرسی)</li>
+                                        <li id="dynamic-docs">
+                                            <!-- Dynamic based on crime -->
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Map Placeholder -->
+                                <div class="bg-gray-200 rounded-xl h-40 flex items-center justify-center relative overflow-hidden group cursor-pointer">
+                                    <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Tehran_location_map.svg/1200px-Tehran_location_map.svg.png');"></div>
+                                    <div class="relative z-10 bg-white/90 px-4 py-2 rounded-lg text-sm font-bold text-primary shadow-sm group-hover:scale-105 transition">
+                                        یافتن نزدیک‌ترین دفتر
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+        },
+
+        // Navigation Logic
+        navigate: (viewName) => {
+            const container = document.getElementById('app-container');
+            const authBtn = document.getElementById('auth-status');
+
+            app.state.view = viewName;
+            container.innerHTML = app.views[viewName];
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Initialize specific view logic
+            if (viewName === 'chat' || viewName === 'triage') {
+                app.initChat();
+            }
+
+            // Update Header Auth Button
+            if (app.state.user) {
+                authBtn.innerHTML = `
+                        <div class="flex items-center gap-2 text-white">
+                            <span class="text-sm">۰۹۱۲...</span>
+                            <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    `;
+            }
+        },
+
+        // Auth Handlers
+        handleLogin: (e) => {
+            e.preventDefault();
+            // Simulate API call
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ارسال...';
+
+            setTimeout(() => {
+                app.navigate('otp');
+            }, 1000);
+        },
+
+        handleOtp: (e) => {
+            e.preventDefault();
+            app.state.user = { phone: '09123456789' };
+            app.navigate('dashboard');
+        },
+
+        submitOtpIfFull: () => {
+            // Mock auto submit
+            setTimeout(() => {
+                app.state.user = { phone: '09123456789' };
+                app.navigate('dashboard');
+            }, 500);
+        },
+
+        // Triage Logic
+        startTriage: (type) => {
+            app.state.crimeType = type;
+            app.navigate('triage');
+        },
+
+        analyzeStory: (e) => {
+            e.preventDefault();
+            const story = document.getElementById('storyInput').value;
+            if(story.length < 5) return alert('لطفاً توضیح بیشتری بدهید');
+
+            // Simple Mock AI Analysis
+            if(story.includes('ماشین') || story.includes('پول') || story.includes('پس')) {
+                app.state.crimeType = 'trust';
+            } else if (story.includes('فحش') || story.includes('توهین')) {
+                app.state.crimeType = 'insult';
+            } else {
+                app.state.crimeType = 'harassment'; // default fallback
+            }
+            app.navigate('triage');
+        },
+
+        // Chat/Wizard Logic
+        initChat: () => {
+            const chatContainer = document.getElementById('chat-messages');
+            app.state.chatHistory = []; // Reset
+            chatContainer.innerHTML = '';
+
+            // Initial Message based on Crime Type
+            let initialMsg = "";
+            if (app.state.crimeType === 'trust') {
+                initialMsg = "متوجه شدم که مشکل خیانت در امانت دارید. برای تنظیم دقیق شکواییه، لطفاً بگویید آیا قراردادی (مثل رسید، اجاره‌نامه) دارید که نشان دهد مال را به او امانت داده‌اید؟";
+                app.state.steps = ['evidence', 'date', 'location', 'name'];
+            } else if (app.state.crimeType === 'insult') {
+                initialMsg = "برای شکایت توهین، آیا این اتفاق در فضای مجازی (تلگرام، اینستاگرام، پیامک) رخ داده است؟";
+                app.state.steps = ['medium', 'witness', 'date', 'location', 'name'];
+            } else {
+                initialMsg = "در مورد مزاحمت، آیا مزاحمت تلفنی بوده یا حضوری؟";
+                app.state.steps = ['type', 'witness', 'date', 'location', 'name'];
+            }
+
+            app.addBotMessage(initialMsg, true); // true for chips
+        },
+
+        addBotMessage: (text, hasOptions = false) => {
+            const chatContainer = document.getElementById('chat-messages');
+            const msgId = Date.now();
+
+            // Typing indicator
+            const typingHtml = `
+                    <div id="typing-${msgId}" class="flex justify-start mb-4 fade-in">
+                        <div class="bg-white border border-gray-200 text-gray-700 rounded-tr-xl rounded-br-xl rounded-bl-xl p-4 shadow-sm flex gap-1 items-center w-16">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
+                        </div>
+                    </div>
+                `;
+            chatContainer.insertAdjacentHTML('beforeend', typingHtml);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            setTimeout(() => {
+                document.getElementById(`typing-${msgId}`).remove();
+
+                const msgHtml = `
+                        <div class="flex justify-start mb-4 fade-in">
+                            <div class="flex flex-col gap-2 max-w-[80%]">
+                                <div class="bg-white border border-gray-200 text-gray-700 rounded-tr-xl rounded-br-xl rounded-bl-xl p-4 shadow-sm text-sm leading-relaxed">
+                                    ${text}
+                                </div>
+                                ${hasOptions ? app.getChipsHtml() : ''}
+                            </div>
+                        </div>
+                    `;
+                chatContainer.insertAdjacentHTML('beforeend', msgHtml);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1000);
+        },
+
+        addUserMessage: (text) => {
+            const chatContainer = document.getElementById('chat-messages');
+            const msgHtml = `
+                    <div class="flex justify-end mb-4 fade-in">
+                        <div class="bg-secondary text-white rounded-tl-xl rounded-tr-xl rounded-bl-xl p-4 shadow-sm max-w-[80%] text-sm leading-relaxed">
+                            ${text}
+                        </div>
+                    </div>
+                `;
+            chatContainer.insertAdjacentHTML('beforeend', msgHtml);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Process next step
+            app.processNextStep(text);
+        },
+
+        getChipsHtml: () => {
+            // Dynamic chips based on context (Simplified for prototype)
+            if (app.state.crimeType === 'trust' && app.state.chatHistory.length === 0) {
+                return `
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="app.handleChipClick('بله، قرارداد دارم')" class="bg-blue-50 text-secondary border border-blue-200 px-4 py-2 rounded-full text-xs hover:bg-secondary hover:text-white transition">بله، قرارداد دارم</button>
+                            <button onclick="app.handleChipClick('خیر، شفاهی بود')" class="bg-blue-50 text-secondary border border-blue-200 px-4 py-2 rounded-full text-xs hover:bg-secondary hover:text-white transition">خیر، شفاهی بود</button>
+                        </div>
+                    `;
+            }
+            return '';
+        },
+
+        handleChipClick: (text) => {
+            app.addUserMessage(text);
+            // Remove chips visual from previous message if needed (optional)
+        },
+
+        handleChatSubmit: (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (text) {
+                app.addUserMessage(text);
+                input.value = '';
+            }
+        },
+
+        processNextStep: (lastUserResponse) => {
+            app.state.chatHistory.push(lastUserResponse);
+            const stepCount = app.state.chatHistory.length;
+
+            // Mock Logic Flow
+            if (stepCount === 1) {
+                app.addBotMessage("بسیار عالی. لطفاً تاریخ دقیق یا تقریبی وقوع جرم را بفرمایید. (مثلاً: هفته پیش یا ۱۴۰۳/۱۰/۱۲)");
+            } else if (stepCount === 2) {
+                app.addBotMessage("آیا شاهد یا مدارک دیگری (مثل پیامک یا فیلم) هم دارید؟ لطفاً کوتاه توضیح دهید.");
+            } else if (stepCount === 3) {
+                app.addBotMessage("نام و نام خانوادگی طرف مقابل (مشتکی عنه) را وارد کنید. اگر نمی‌دانید بنویسید 'ناشناس'.");
+            } else if (stepCount === 4) {
+                app.addBotMessage("در حال تنظیم متن نهایی شکواییه... لطفاً چند لحظه صبر کنید.");
+                setTimeout(() => {
+                    app.generateDocument();
+                    app.navigate('result');
+                }, 2500);
+            }
+        },
+
+        generateDocument: () => {
+            setTimeout(() => {
+                const docContainer = document.getElementById('document-content');
+                const crimeTitle = app.state.crimeType === 'trust' ? 'خیانت در امانت' : (app.state.crimeType === 'insult' ? 'توهین و فحاشی' : 'مزاحمت');
+
+                const date = app.state.chatHistory[1] || "---";
+                const evidence = app.state.chatHistory[2] || "---";
+                const accused = app.state.chatHistory[3] || "ناشناس";
+
+                const template = `
+                        <div class="text-center font-bold text-lg mb-8 border-b-2 border-black pb-4 inline-block mx-auto w-full">
+                            برگ شکواییه
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+                            <div><strong>شاکی:</strong> کاربر محترم (شما)</div>
+                            <div><strong>مشتکی‌عنه:</strong> ${accused}</div>
+                            <div><strong>موضوع جرم:</strong> ${crimeTitle}</div>
+                            <div><strong>تاریخ وقوع:</strong> ${date}</div>
+                        </div>
+
+                        <div class="mb-4 font-bold">ریاست محترم دادسرای عمومی و انقلاب،</div>
+                        <p class="mb-4">
+                            با سلام و احترام،<br>
+                            به استحضار می‌رساند اینجانب در تاریخ ${date}، مورد بزه ${crimeTitle} قرار گرفته‌ام.
+                        </p>
+                        ${app.getCrimeSpecificText(app.state.crimeType, accused, evidence)}
+                        <p class="mb-4">
+                            لذا با توجه به ادله ابرازی شامل: ${evidence}، مستنداً به ماده قانونی مربوطه، تعقیب کیفری نامبرده و صدور حکم بر مجازات ایشان مورد استدعاست.
+                        </p>
+                        <div class="mt-12 text-left pl-10">
+                            <strong>امضاء شاکی</strong>
+                        </div>
+                    `;
+
+                if(docContainer) docContainer.innerHTML = template;
+
+                // Update Dynamic Docs List
+                const list = document.getElementById('dynamic-docs');
+                if(list) {
+                    if(app.state.crimeType === 'trust') list.innerHTML = `<li class="flex items-center gap-2"><i class="fas fa-file-contract text-secondary"></i> اصل قرارداد یا رسید امانی</li>`;
+                    if(app.state.crimeType === 'insult') list.innerHTML = `<li class="flex items-center gap-2"><i class="fas fa-mobile text-secondary"></i> اسکرین‌شات پیام‌ها یا استشهادیه</li>`;
+                }
+            }, 100);
+        },
+
+        getCrimeSpecificText: (type, accused, evidence) => {
+            if (type === 'trust') {
+                return `<p class="mb-4">اینجانب اموالی را به رسم امانت به مشتکی‌عنه (${accused}) سپردم، اما ایشان با وجود درخواست‌های مکرر و انقضای مدت، از استرداد آن خودداری نموده و اقدام به تصاحب آن کرده است که مصداق بارز ماده ۶۷۴ قانون مجازات اسلامی می‌باشد.</p>`;
+            } else if (type === 'insult') {
+                return `<p class="mb-4">مشتکی‌عنه (${accused}) با استفاده از الفاظ رکیک و توهین‌آمیز که خلاف شئونات اخلاقی و اسلامی است، اقدام به هتک حرمت اینجانب نموده است که شرح آن در مدارک پیوست (${evidence}) موجود است.</p>`;
+            }
+            return `<p class="mb-4">نامبرده (${accused}) با اقدامات خود موجب سلب آسایش و مزاحمت برای اینجانب شده است.</p>`;
+        }
+    };
+
+    // Initialize App
+    document.addEventListener('DOMContentLoaded', () => {
+        app.navigate('home');
+    });
+</script>
+</body>
+</html>

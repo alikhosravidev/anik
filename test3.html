@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آنیک - دستیار هوشمند حقوقی</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        :root {
+            --primary: #1A3A5F;
+            --secondary: #4A90E2;
+            --background: #F9FAFB;
+            --success: #27AE60;
+            --warning: #F39C12;
+            --text: #333333;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .chat-bubble-bot {
+            background: linear-gradient(135deg, #E8F4FD 0%, #F0F7FF 100%);
+            border-radius: 0 16px 16px 16px;
+        }
+
+        .chat-bubble-user {
+            background: linear-gradient(135deg, #1A3A5F 0%, #2A4A6F 100%);
+            border-radius: 16px 0 16px 16px;
+            color: white;
+        }
+
+        .option-btn {
+            transition: all 0.3s ease;
+            border: 2px solid #E5E7EB;
+        }
+
+        .option-btn:hover {
+            border-color: #4A90E2;
+            background: #F0F7FF;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            border-color: #1A3A5F;
+            background: #E8F4FD;
+        }
+
+        .progress-step {
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #1A3A5F;
+            color: white;
+        }
+
+        .progress-step.completed {
+            background: #27AE60;
+            color: white;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .typing-indicator span {
+            animation: typing 1.4s infinite;
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4A90E2;
+            border-radius: 50%;
+            margin: 0 2px;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .document-section {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .document-header {
+            font-family: 'B Nazanin', 'Vazirmatn', serif;
+            text-align: center;
+            border-bottom: 2px solid #1A3A5F;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        .hero-pattern {
+            background-color: #F9FAFB;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231A3A5F' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-[#F9FAFB] text-[#333333]">
+
+<!-- ===== صفحه فرود (Landing Page) ===== -->
+<div id="landing-page" class="page active">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-[#1A3A5F] to-[#4A90E2] rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-[#1A3A5F]">آنیک</span>
+            </div>
+            <button onclick="showPage('login-page')" class="bg-[#1A3A5F] text-white px-6 py-2.5 rounded-xl font-medium hover:bg-[#2A4A6F] transition-all">
+                ورود / ثبت‌نام
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern py-20 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="inline-block bg-[#E8F4FD] text-[#1A3A5F] px-4 py-2 rounded-full text-sm font-medium mb-6">
+                ✨ تنظیم شکواییه در کمتر از ۵ دقیقه
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-[#1A3A5F] mb-6 leading-tight">
+                دستیار هوشمند حقوقی<br/>
+                <span class="text-[#4A90E2]">آنیک</span>
+            </h1>
+            <p class="text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                بدون نیاز به دانش حقوقی، شکواییه و دادخواست خود را به صورت هوشمند و رایگان تنظیم کنید.
+                ما شما را گام به گام راهنمایی می‌کنیم.
+            </p>
+            <button onclick="showPage('login-page')" class="bg-[#1A3A5F] text-white px-10 py-4 rounded-2xl text-lg font-bold hover:bg-[#2A4A6F] transition-all shadow-lg shadow-[#1A3A5F]/20 hover:shadow-xl hover:shadow-[#1A3A5F]/30 hover:-translate-y-1">
+                شروع تنظیم شکواییه
+                <span class="mr-2">←</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-2xl font-bold text-center text-[#1A3A5F] mb-12">خدمات ما</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-[#F9FAFB] p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all">
+                    <div class="w-14 h-14 bg-[#E8F4FD] rounded-xl flex items-center justify-center mb-4">
+                        <span class="text-2xl">🤝</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#1A3A5F] mb-2">خیانت در امانت</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        اگر مال یا وجهی را به کسی امانت داده‌اید و استرداد نمی‌کند، ما شکواییه شما را تنظیم می‌کنیم.
+                    </p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-[#F9FAFB] p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all">
+                    <div class="w-14 h-14 bg-[#E8F4FD] rounded-xl flex items-center justify-center mb-4">
+                        <span class="text-2xl">🗣️</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#1A3A5F] mb-2">توهین و فحاشی</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        در صورت مواجهه با توهین در فضای مجازی یا حضوری، حق شما قابل پیگیری است.
+                    </p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-[#F9FAFB] p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all">
+                    <div class="w-14 h-14 bg-[#E8F4FD] rounded-xl flex items-center justify-center mb-4">
+                        <span class="text-2xl">📞</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#1A3A5F] mb-2">مزاحمت</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        مزاحمت تلفنی، پیامکی یا حضوری جرم است و ما در تنظیم شکواییه کمکتان می‌کنیم.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="py-16 px-4 bg-[#F9FAFB]">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-2xl font-bold text-center text-[#1A3A5F] mb-4">چگونه کار می‌کند؟</h2>
+            <p class="text-center text-gray-600 mb-12">فقط ۴ مرحله ساده تا دریافت شکواییه حرفه‌ای</p>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-[#1A3A5F] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">۱</div>
+                    <h4 class="font-bold text-[#1A3A5F] mb-2">ورود به سامانه</h4>
+                    <p class="text-sm text-gray-600">با شماره موبایل وارد شوید</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-[#1A3A5F] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">۲</div>
+                    <h4 class="font-bold text-[#1A3A5F] mb-2">شرح ماجرا</h4>
+                    <p class="text-sm text-gray-600">داستان خود را بیان کنید</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-[#1A3A5F] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">۳</div>
+                    <h4 class="font-bold text-[#1A3A5F] mb-2">پاسخ به سوالات</h4>
+                    <p class="text-sm text-gray-600">سوالات کوتاه را پاسخ دهید</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-[#27AE60] text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">۴</div>
+                    <h4 class="font-bold text-[#1A3A5F] mb-2">دریافت فایل</h4>
+                    <p class="text-sm text-gray-600">شکواییه آماده دانلود است</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-4 bg-gradient-to-br from-[#1A3A5F] to-[#2A4A6F]">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">همین الان شروع کنید</h2>
+            <p class="text-white/80 mb-8">تنظیم شکواییه کاملاً رایگان است</p>
+            <button onclick="showPage('login-page')" class="bg-white text-[#1A3A5F] px-10 py-4 rounded-2xl text-lg font-bold hover:bg-gray-100 transition-all">
+                ورود و استفاده از خدمات
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white py-6 px-4 border-t">
+        <div class="max-w-6xl mx-auto">
+            <div class="bg-[#FFF3CD] border border-[#F39C12]/30 rounded-xl p-4 mb-6">
+                <div class="flex items-start gap-3">
+                    <span class="text-xl">⚠️</span>
+                    <p class="text-sm text-[#856404]">
+                        <strong>سلب مسئولیت:</strong> این سامانه وکیل دادگستری نیست و صرفاً پیش‌نویس اوراق قضایی را بر اساس اظهارات شما تنظیم می‌کند. مسئولیت صحت اطلاعات با کاربر است.
+                    </p>
+                </div>
+            </div>
+            <p class="text-center text-gray-500 text-sm">© ۱۴۰۴ آنیک - تمامی حقوق محفوظ است</p>
+        </div>
+    </footer>
+</div>
+
+<!-- ===== صفحه لاگین ===== -->
+<div id="login-page" class="page">
+    <div class="min-h-screen flex flex-col bg-[#F9FAFB]">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="max-w-md mx-auto px-4 py-4 flex items-center">
+                <button onclick="showPage('landing-page')" class="text-gray-500 hover:text-[#1A3A5F] ml-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <span class="font-bold text-[#1A3A5F]">ورود به آنیک</span>
+            </div>
+        </header>
+
+        <div class="flex-1 flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md">
+                <!-- Logo -->
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-br from-[#1A3A5F] to-[#4A90E2] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-[#1A3A5F]">خوش آمدید</h1>
+                    <p class="text-gray-500 text-sm mt-2">برای ورود شماره موبایل خود را وارد کنید</p>
+                </div>
+
+                <!-- Phone Input Step -->
+                <div id="phone-step">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">شماره موبایل</label>
+                        <input type="tel" id="phone-input" placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                               class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl text-center text-lg tracking-widest focus:border-[#4A90E2]"
+                               maxlength="11" dir="ltr">
+                    </div>
+                    <button onclick="sendOTP()" class="w-full bg-[#1A3A5F] text-white py-4 rounded-xl font-bold hover:bg-[#2A4A6F] transition-all">
+                        دریافت کد تایید
+                    </button>
+                </div>
+
+                <!-- OTP Step -->
+                <div id="otp-step" class="hidden">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">کد تایید</label>
+                        <p class="text-sm text-gray-500 mb-4">کد ارسال شده به <span id="phone-display" class="font-bold text-[#1A3A5F]"></span> را وارد کنید</p>
+                        <div class="flex gap-3 justify-center" dir="ltr">
+                            <input type="text" maxlength="1" class="otp-input w-14 h-14 border-2 border-gray-200 rounded-xl text-center text-2xl font-bold focus:border-[#4A90E2]" oninput="handleOTPInput(this, 0)">
+                            <input type="text" maxlength="1" class="otp-input w-14 h-14 border-2 border-gray-200 rounded-xl text-center text-2xl font-bold focus:border-[#4A90E2]" oninput="handleOTPInput(this, 1)">
+                            <input type="text" maxlength="1" class="otp-input w-14 h-14 border-2 border-gray-200 rounded-xl text-center text-2xl font-bold focus:border-[#4A90E2]" oninput="handleOTPInput(this, 2)">
+                            <input type="text" maxlength="1" class="otp-input w-14 h-14 border-2 border-gray-200 rounded-xl text-center text-2xl font-bold focus:border-[#4A90E2]" oninput="handleOTPInput(this, 3)">
+                        </div>
+                    </div>
+                    <button onclick="verifyOTP()" class="w-full bg-[#1A3A5F] text-white py-4 rounded-xl font-bold hover:bg-[#2A4A6F] transition-all">
+                        ورود به پنل
+                    </button>
+                    <button onclick="showPhoneStep()" class="w-full text-[#4A90E2] py-3 mt-3 font-medium hover:underline">
+                        تغییر شماره موبایل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== داشبورد کاربر ===== -->
+<div id="dashboard-page" class="page">
+    <div class="min-h-screen bg-[#F9FAFB]">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-2xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-[#1A3A5F] to-[#4A90E2] rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                        </svg>
+                    </div>
+                    <span class="font-bold text-[#1A3A5F]">آنیک</span>
+                </div>
+                <button onclick="showPage('landing-page')" class="text-gray-500 hover:text-red-500 text-sm">
+                    خروج
+                </button>
+            </div>
+        </header>
+
+        <div class="max-w-2xl mx-auto px-4 py-8">
+            <!-- Welcome Message -->
+            <div class="bg-gradient-to-br from-[#1A3A5F] to-[#2A4A6F] rounded-3xl p-6 text-white mb-8">
+                <h1 class="text-xl font-bold mb-2">سلام! 👋</h1>
+                <p class="text-white/80 text-sm">
+                    من آنیک هستم، دستیار هوشمند حقوقی شما. اینجا هستم تا در تنظیم شکواییه کمکتان کنم.
+                </p>
+            </div>
+
+            <!-- Story Form -->
+            <div class="bg-white rounded-3xl shadow-lg p-6">
+                <h2 class="text-lg font-bold text-[#1A3A5F] mb-2">ماجرای خود را بیان کنید</h2>
+                <p class="text-sm text-gray-500 mb-6">در چند جمله ساده بگویید چه اتفاقی افتاده است</p>
+
+                <textarea id="user-story"
+                          class="w-full h-32 p-4 border-2 border-gray-200 rounded-xl resize-none focus:border-[#4A90E2] text-sm"
+                          placeholder="مثال: یک ماه پیش خودرو خود را به دوستم امانت دادم و الان برنمی‌گرداند..."></textarea>
+
+                <div class="mt-4 flex gap-3">
+                    <button onclick="startWizard()" class="flex-1 bg-[#1A3A5F] text-white py-4 rounded-xl font-bold hover:bg-[#2A4A6F] transition-all">
+                        ادامه و تنظیم شکواییه
+                    </button>
+                </div>
+
+                <!-- Quick Select -->
+                <div class="mt-6 pt-6 border-t">
+                    <p class="text-sm text-gray-500 mb-4">یا موضوع خود را انتخاب کنید:</p>
+                    <div class="grid grid-cols-1 gap-3">
+                        <button onclick="selectCrime('khiyanat')" class="option-btn flex items-center gap-4 p-4 rounded-xl text-right">
+                            <span class="text-2xl">🤝</span>
+                            <div>
+                                <div class="font-bold text-[#1A3A5F]">خیانت در امانت</div>
+                                <div class="text-xs text-gray-500">خودرو، چک، سفته، پول نقد</div>
+                            </div>
+                        </button>
+                        <button onclick="selectCrime('tohin')" class="option-btn flex items-center gap-4 p-4 rounded-xl text-right">
+                            <span class="text-2xl">🗣️</span>
+                            <div>
+                                <div class="font-bold text-[#1A3A5F]">توهین و فحاشی</div>
+                                <div class="text-xs text-gray-500">فضای مجازی یا حضوری</div>
+                            </div>
+                        </button>
+                        <button onclick="selectCrime('mozahemat')" class="option-btn flex items-center gap-4 p-4 rounded-xl text-right">
+                            <span class="text-2xl">📞</span>
+                            <div>
+                                <div class="font-bold text-[#1A3A5F]">مزاحمت</div>
+                                <div class="text-xs text-gray-500">تلفنی، پیامکی، حضوری</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== صفحه ویزارد سوالات ===== -->
+<div id="wizard-page" class="page">
+    <div class="min-h-screen bg-[#F9FAFB] flex flex-col">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-2xl mx-auto px-4 py-4">
+                <div class="flex justify-between items-center mb-3">
+                    <button onclick="showPage('dashboard-page')" class="text-gray-500 hover:text-[#1A3A5F]">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <span class="font-bold text-[#1A3A5F]" id="wizard-title">خیانت در امانت</span>
+                    <span class="text-sm text-gray-500" id="step-counter">۱ از ۶</span>
+                </div>
+                <!-- Progress Bar -->
+                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-l from-[#1A3A5F] to-[#4A90E2] transition-all duration-500" style="width: 16%"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Container -->
+        <div id="chat-container" class="flex-1 overflow-y-auto p-4 max-w-2xl mx-auto w-full scroll-smooth">
+            <!-- Messages will be added here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="bg-white border-t shadow-lg">
+            <div class="max-w-2xl mx-auto p-4" id="input-area">
+                <!-- Dynamic input will appear here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== صفحه نتایج ===== -->
+<div id="result-page" class="page">
+    <div class="min-h-screen bg-[#F9FAFB]">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-[#27AE60] rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <span class="font-bold text-[#1A3A5F]">شکواییه آماده است</span>
+                </div>
+                <button onclick="showPage('dashboard-page')" class="text-[#4A90E2] text-sm font-medium">
+                    پرونده جدید
+                </button>
+            </div>
+        </header>
+
+        <div class="max-w-3xl mx-auto px-4 py-8">
+            <!-- Success Message -->
+            <div class="bg-gradient-to-br from-[#27AE60] to-[#2ECC71] rounded-3xl p-6 text-white mb-8 text-center">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold mb-2">تبریک! شکواییه شما آماده شد</h1>
+                <p class="text-white/80 text-sm">می‌توانید فایل‌های زیر را دانلود کنید</p>
+            </div>
+
+            <!-- Complaint Section -->
+            <div class="document-section mb-6" id="complaint-section">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-[#1A3A5F] flex items-center gap-2">
+                        <span class="w-8 h-8 bg-[#E8F4FD] rounded-lg flex items-center justify-center">📄</span>
+                        شکواییه
+                    </h3>
+                    <button onclick="downloadSection('complaint')" class="bg-[#1A3A5F] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#2A4A6F] transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        دانلود PDF
+                    </button>
+                </div>
+                <div id="complaint-content" class="bg-[#FAFBFC] rounded-xl p-6 border text-sm leading-loose">
+                    <!-- Complaint content will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Consultation Section -->
+            <div class="document-section" id="consultation-section">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-[#1A3A5F] flex items-center gap-2">
+                        <span class="w-8 h-8 bg-[#E8F4FD] rounded-lg flex items-center justify-center">💡</span>
+                        راهنما و توضیحات
+                    </h3>
+                    <button onclick="downloadSection('consultation')" class="border-2 border-[#1A3A5F] text-[#1A3A5F] px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#E8F4FD] transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        دانلود PDF
+                    </button>
+                </div>
+                <div id="consultation-content" class="bg-[#FAFBFC] rounded-xl p-6 border text-sm leading-loose">
+                    <!-- Consultation content will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Checklist -->
+            <div class="bg-white rounded-3xl shadow-lg p-6 mt-8">
+                <h3 class="font-bold text-[#1A3A5F] mb-4 flex items-center gap-2">
+                    <span class="text-xl">✅</span>
+                    چک‌لیست مدارک مورد نیاز
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 p-3 bg-[#F9FAFB] rounded-xl cursor-pointer hover:bg-[#E8F4FD] transition-all">
+                        <input type="checkbox" class="w-5 h-5 text-[#27AE60] rounded">
+                        <span class="text-sm">کارت ملی هوشمند</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-[#F9FAFB] rounded-xl cursor-pointer hover:bg-[#E8F4FD] transition-all">
+                        <input type="checkbox" class="w-5 h-5 text-[#27AE60] rounded">
+                        <span class="text-sm">پرینت شکواییه (۲ نسخه)</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-[#F9FAFB] rounded-xl cursor-pointer hover:bg-[#E8F4FD] transition-all">
+                        <input type="checkbox" class="w-5 h-5 text-[#27AE60] rounded">
+                        <span class="text-sm">مدارک و مستندات (رسید، پیامک، قرارداد)</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 bg-[#F9FAFB] rounded-xl cursor-pointer hover:bg-[#E8F4FD] transition-all">
+                        <input type="checkbox" class="w-5 h-5 text-[#27AE60] rounded">
+                        <span class="text-sm">هزینه دادرسی</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Nearest Office -->
+            <div class="bg-white rounded-3xl shadow-lg p-6 mt-6">
+                <h3 class="font-bold text-[#1A3A5F] mb-4 flex items-center gap-2">
+                    <span class="text-xl">📍</span>
+                    دفتر خدمات الکترونیک قضایی
+                </h3>
+                <div class="bg-[#E8F4FD] rounded-xl p-4 text-sm">
+                    <p class="font-medium text-[#1A3A5F] mb-2">نزدیک‌ترین دفتر به شما:</p>
+                    <p class="text-gray-600 mb-3">برای ثبت شکواییه به دفتر خدمات الکترونیک قضایی مراجعه کنید.</p>
+                    <a href="https://maps.google.com" target="_blank" class="inline-flex items-center gap-2 text-[#4A90E2] font-medium hover:underline">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        مشاهده در نقشه
+                    </a>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="bg-[#FFF3CD] border border-[#F39C12]/30 rounded-xl p-4 mt-6">
+                <div class="flex items-start gap-3">
+                    <span class="text-xl">⚠️</span>
+                    <p class="text-sm text-[#856404]">
+                        <strong>سلب مسئولیت:</strong> این سامانه وکیل دادگستری نیست. این سامانه صرفاً پیش‌نویس شکواییه را بر اساس اظهارات شما تنظیم می‌کند. مسئولیت صحت اطلاعات با کاربر است.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== State Management =====
+    let currentPage = 'landing-page';
+    let currentStep = 0;
+    let selectedCrime = '';
+    let userAnswers = {};
+    let userStory = '';
+
+    // ===== Wizard Questions =====
+    const wizardQuestions = {
+        khiyanat: [
+            {
+                id: 'has_property',
+                question: 'آیا مال یا پولی به طرف مقابل داده‌اید؟',
+                type: 'binary',
+                options: ['بله', 'خیر'],
+                nextOnNo: 'not_crime'
+            },
+            {
+                id: 'is_amanat',
+                question: 'آیا قرار بود عین همان چیز را برگرداند؟ (امانت بوده نه قرض)',
+                type: 'binary',
+                options: ['بله، امانت بوده', 'خیر، قرض بوده'],
+                nextOnNo: 'civil_case'
+            },
+            {
+                id: 'has_evidence',
+                question: 'آیا مدرکی دارید؟ (رسید، پیامک، قرارداد)',
+                type: 'binary',
+                options: ['بله، مدرک دارم', 'خیر، مدرک ندارم']
+            },
+            {
+                id: 'date',
+                question: 'تاریخ دقیق یا حدودی اتفاق کی بود؟',
+                type: 'date'
+            },
+            {
+                id: 'location',
+                question: 'محل دقیق اتفاق کجا بود؟ (شهر و خیابان)',
+                type: 'text',
+                placeholder: 'مثال: تهران، خیابان ولیعصر'
+            },
+            {
+                id: 'accused_name',
+                question: 'نام متهم را می‌دانید؟',
+                type: 'text_optional',
+                placeholder: 'نام و نام خانوادگی متهم',
+                optional: true
+            }
+        ],
+        tohin: [
+            {
+                id: 'insult_type',
+                question: 'نوع توهین چگونه بوده است؟',
+                type: 'options',
+                options: ['فحاشی ناموسی یا رکیک', 'توهین به کارمند دولت', 'تهمت دزدی یا جرم']
+            },
+            {
+                id: 'platform',
+                question: 'توهین در کجا اتفاق افتاده؟',
+                type: 'options',
+                options: ['فضای مجازی (پیام‌رسان/شبکه اجتماعی)', 'حضوری', 'تلفنی']
+            },
+            {
+                id: 'has_witness',
+                question: 'آیا شاهد دارید؟',
+                type: 'binary',
+                options: ['بله', 'خیر']
+            },
+            {
+                id: 'date',
+                question: 'تاریخ دقیق یا حدودی اتفاق کی بود؟',
+                type: 'date'
+            },
+            {
+                id: 'location',
+                question: 'محل دقیق اتفاق کجا بود؟',
+                type: 'text',
+                placeholder: 'مثال: تهران، خیابان آزادی'
+            },
+            {
+                id: 'accused_name',
+                question: 'نام متهم را می‌دانید؟',
+                type: 'text_optional',
+                placeholder: 'نام و نام خانوادگی متهم',
+                optional: true
+            }
+        ],
+        mozahemat: [
+            {
+                id: 'mozahemat_type',
+                question: 'نوع مزاحمت چگونه بوده است؟',
+                type: 'options',
+                options: ['مزاحمت تلفنی', 'مزاحمت پیامکی', 'مزاحمت حضوری', 'مزاحمت برای بانوان']
+            },
+            {
+                id: 'frequency',
+                question: 'تعداد دفعات مزاحمت چقدر بوده؟',
+                type: 'options',
+                options: ['یک بار', 'چند بار', 'مکرر و مداوم']
+            },
+            {
+                id: 'has_evidence',
+                question: 'آیا مدرکی دارید؟ (پرینت تماس، اسکرین‌شات)',
+                type: 'binary',
+                options: ['بله', 'خیر']
+            },
+            {
+                id: 'date',
+                question: 'آخرین تاریخ مزاحمت کی بود؟',
+                type: 'date'
+            },
+            {
+                id: 'accused_name',
+                question: 'نام یا شماره تماس مزاحم را می‌دانید؟',
+                type: 'text_optional',
+                placeholder: 'نام یا شماره تماس',
+                optional: true
+            }
+        ]
+    };
+
+    const crimeNames = {
+        khiyanat: 'خیانت در امانت',
+        tohin: 'توهین و فحاشی',
+        mozahemat: 'مزاحمت'
+    };
+
+    // ===== Page Navigation =====
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        currentPage = pageId;
+        window.scrollTo(0, 0);
+    }
+
+    // ===== Login Functions =====
+    function sendOTP() {
+        const phone = document.getElementById('phone-input').value;
+        if (phone.length < 10) {
+            alert('لطفاً شماره موبایل صحیح وارد کنید');
+            return;
+        }
+        document.getElementById('phone-step').classList.add('hidden');
+        document.getElementById('otp-step').classList.remove('hidden');
+        document.getElementById('phone-display').textContent = phone;
+    }
+
+    function showPhoneStep() {
+        document.getElementById('otp-step').classList.add('hidden');
+        document.getElementById('phone-step').classList.remove('hidden');
+    }
+
+    function handleOTPInput(input, index) {
+        if (input.value.length === 1) {
+            const inputs = document.querySelectorAll('.otp-input');
+            if (index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        }
+    }
+
+    function verifyOTP() {
+        const inputs = document.querySelectorAll('.otp-input');
+        let otp = '';
+        inputs.forEach(i => otp += i.value);
+        if (otp.length === 4) {
+            showPage('dashboard-page');
+        } else {
+            alert('لطفاً کد ۴ رقمی را کامل وارد کنید');
+        }
+    }
+
+    // ===== Wizard Functions =====
+    function selectCrime(crime) {
+        selectedCrime = crime;
+        startWizard();
+    }
+
+    function startWizard() {
+        userStory = document.getElementById('user-story')?.value || '';
+
+        if (!selectedCrime) {
+            // Auto-detect from story
+            const story = userStory.toLowerCase();
+            if (story.includes('امانت') || story.includes('پول') || story.includes('برنمی‌گردان')) {
+                selectedCrime = 'khiyanat';
+            } else if (story.includes('توهین') || story.includes('فحش') || story.includes('فحاشی')) {
+                selectedCrime = 'tohin';
+            } else if (story.includes('مزاحم') || story.includes('آزار')) {
+                selectedCrime = 'mozahemat';
+            } else {
+                selectedCrime = 'khiyanat'; // Default
+            }
+        }
+
+        currentStep = 0;
+        userAnswers = {};
+        document.getElementById('wizard-title').textContent = crimeNames[selectedCrime];
+        document.getElementById('chat-container').innerHTML = '';
+
+        showPage('wizard-page');
+
+        // Show initial bot message
+        setTimeout(() => {
+            addBotMessage('با سلام. جهت تنظیم شکواییه به سوالات زیر پاسخ دهید.');
+            setTimeout(() => askQuestion(), 800);
+        }, 500);
+    }
+
+    function askQuestion() {
+        const questions = wizardQuestions[selectedCrime];
+        if (currentStep >= questions.length) {
+            finishWizard();
+            return;
+        }
+
+        const q = questions[currentStep];
+        updateProgress();
+
+        setTimeout(() => {
+            addBotMessage(q.question);
+            showInputForQuestion(q);
+        }, 500);
+    }
+
+    function updateProgress() {
+        const questions = wizardQuestions[selectedCrime];
+        const progress = ((currentStep + 1) / questions.length) * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('step-counter').textContent = `${currentStep + 1} از ${questions.length}`;
+    }
+
+    function addBotMessage(text) {
+        const container = document.getElementById('chat-container');
+        const div = document.createElement('div');
+        div.className = 'flex items-start gap-3 mb-4 fade-in';
+        div.innerHTML = `
+                <div class="w-10 h-10 bg-gradient-to-br from-[#1A3A5F] to-[#4A90E2] rounded-xl flex-shrink-0 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                    </svg>
+                </div>
+                <div class="chat-bubble-bot p-4 max-w-[80%]">
+                    <p class="text-sm text-[#333]">${text}</p>
+                </div>
+            `;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function addUserMessage(text) {
+        const container = document.getElementById('chat-container');
+        const div = document.createElement('div');
+        div.className = 'flex justify-end mb-4 fade-in';
+        div.innerHTML = `
+                <div class="chat-bubble-user p-4 max-w-[80%]">
+                    <p class="text-sm">${text}</p>
+                </div>
+            `;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function showInputForQuestion(q) {
+        const inputArea = document.getElementById('input-area');
+
+        if (q.type === 'binary' || q.type === 'options') {
+            const options = q.options || ['بله', 'خیر'];
+            inputArea.innerHTML = `
+                    <div class="flex flex-wrap gap-3 justify-center">
+                        ${options.map((opt, i) => `
+                            <button onclick="answerQuestion('${q.id}', '${opt}')"
+                                class="option-btn px-6 py-3 rounded-xl font-medium text-[#1A3A5F] bg-white hover:bg-[#E8F4FD]">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+        } else if (q.type === 'date') {
+            inputArea.innerHTML = `
+                    <div class="flex gap-3">
+                        <input type="text" id="answer-input" placeholder="مثال: ۱۴۰۳/۱۰/۱۵"
+                            class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#4A90E2]">
+                        <button onclick="submitTextAnswer('${q.id}')"
+                            class="bg-[#1A3A5F] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#2A4A6F]">
+                            تایید
+                        </button>
+                    </div>
+                `;
+        } else if (q.type === 'text' || q.type === 'text_optional') {
+            inputArea.innerHTML = `
+                    <div class="flex gap-3">
+                        <input type="text" id="answer-input" placeholder="${q.placeholder || 'پاسخ خود را بنویسید...'}"
+                            class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#4A90E2]">
+                        <button onclick="submitTextAnswer('${q.id}')"
+                            class="bg-[#1A3A5F] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#2A4A6F]">
+                            تایید
+                        </button>
+                    </div>
+                    ${q.optional ? `
+                        <button onclick="skipQuestion('${q.id}')" class="w-full text-gray-500 py-2 mt-2 text-sm hover:text-[#4A90E2]">
+                            نمی‌دانم / رد شدن
+                        </button>
+                    ` : ''}
+                `;
+        }
+    }
+
+    function answerQuestion(id, answer) {
+        userAnswers[id] = answer;
+        addUserMessage(answer);
+
+        const questions = wizardQuestions[selectedCrime];
+        const currentQ = questions[currentStep];
+
+        // Check for special cases
+        if (currentQ.nextOnNo && answer.includes('خیر')) {
+            if (currentQ.nextOnNo === 'not_crime') {
+                showNotCrimeMessage();
+                return;
+            } else if (currentQ.nextOnNo === 'civil_case') {
+                showCivilCaseMessage();
+                return;
+            }
+        }
+
+        if (id === 'insult_type' && answer === 'تهمت دزدی یا جرم') {
+            showLeadGeneration();
+            return;
+        }
+
+        currentStep++;
+        setTimeout(() => askQuestion(), 800);
+    }
+
+    function submitTextAnswer(id) {
+        const input = document.getElementById('answer-input');
+        const answer = input.value.trim();
+        if (!answer) {
+            alert('لطفاً پاسخ را وارد کنید');
+            return;
+        }
+        userAnswers[id] = answer;
+        addUserMessage(answer);
+        currentStep++;
+        setTimeout(() => askQuestion(), 800);
+    }
+
+    function skipQuestion(id) {
+        userAnswers[id] = 'مجهول';
+        addUserMessage('نمی‌دانم');
+        currentStep++;
+        setTimeout(() => askQuestion(), 800);
+    }
+
+    function showNotCrimeMessage() {
+        addBotMessage('بر اساس اطلاعات وارده، به نظر می‌رسد موضوع شما جرم کیفری نیست. برای راهنمایی بیشتر با یک وکیل مشورت کنید.');
+        showLeadGeneration();
+    }
+
+    function showCivilCaseMessage() {
+        addBotMessage('این مورد حقوقی است و جرم کیفری نیست. برای مطالبه طلب خود باید دادخواست حقوقی بدهید.');
+        showLeadGeneration();
+    }
+
+    function showLeadGeneration() {
+        const inputArea = document.getElementById('input-area');
+        inputArea.innerHTML = `
+                <div class="bg-[#FFF3CD] rounded-xl p-4 mb-4">
+                    <p class="text-sm text-[#856404]">
+                        موضوع شما تخصصی است و نیاز به بررسی توسط وکیل دارد. برای مشاوره رایگان شماره خود را وارد کنید.
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <input type="tel" id="lead-phone" placeholder="شماره موبایل"
+                        class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#4A90E2]" dir="ltr">
+                    <button onclick="submitLead()"
+                        class="bg-[#27AE60] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#219A52]">
+                        ثبت درخواست
+                    </button>
+                </div>
+            `;
+    }
+
+    function submitLead() {
+        alert('درخواست شما ثبت شد. کارشناسان ما با شما تماس خواهند گرفت.');
+        showPage('dashboard-page');
+    }
+
+    function finishWizard() {
+        addBotMessage('ممنون! اطلاعات کافی دریافت شد. در حال تنظیم شکواییه...');
+
+        const inputArea = document.getElementById('input-area');
+        inputArea.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="typing-indicator inline-flex items-center gap-1 bg-[#E8F4FD] px-4 py-2 rounded-full">
+                        <span></span><span></span><span></span>
+                        <span class="mr-2 text-sm text-[#1A3A5F]">در حال پردازش...</span>
+                    </div>
+                </div>
+            `;
+
+        setTimeout(() => {
+            generateDocument();
+            showPage('result-page');
+        }, 2000);
+    }
+
+    function generateDocument() {
+        const crimeName = crimeNames[selectedCrime];
+        const date = userAnswers.date || '---';
+        const location = userAnswers.location || '---';
+        const accusedName = userAnswers.accused_name || 'مجهول‌الهویه';
+
+        let legalArticle = '';
+        if (selectedCrime === 'khiyanat') {
+            legalArticle = 'ماده ۶۷۴ قانون مجازات اسلامی';
+        } else if (selectedCrime === 'tohin') {
+            if (userAnswers.insult_type?.includes('کارمند')) {
+                legalArticle = 'ماده ۶۰۹ قانون مجازات اسلامی (توهین مشدد)';
+            } else {
+                legalArticle = 'ماده ۶۰۸ قانون مجازات اسلامی';
+            }
+        } else if (selectedCrime === 'mozahemat') {
+            if (userAnswers.mozahemat_type?.includes('بانوان')) {
+                legalArticle = 'ماده ۶۱۹ قانون مجازات اسلامی';
+            } else {
+                legalArticle = 'ماده ۶۴۱ قانون مجازات اسلامی';
+            }
+        }
+
+        // Generate Complaint
+        const complaintHTML = `
+                <div class="document-header">
+                    <h2 class="text-xl font-bold text-[#1A3A5F]">بسمه تعالی</h2>
+                    <h3 class="text-lg font-bold mt-2">شکواییه</h3>
+                </div>
+                <div class="space-y-4">
+                    <p><strong>ریاست محترم دادسرای عمومی و انقلاب</strong></p>
+                    <p>با سلام و احترام</p>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p><strong>مشخصات شاکی:</strong> [نام و مشخصات شما]</p>
+                        <p><strong>مشخصات مشتکی‌عنه:</strong> ${accusedName}</p>
+                    </div>
+
+                    <p><strong>موضوع شکایت:</strong> ${crimeName}</p>
+
+                    <p><strong>شرح ماوقع:</strong></p>
+                    <p class="text-justify leading-relaxed">
+                        احتراماً به استحضار می‌رساند در تاریخ ${date} در محل ${location}،
+                        مشتکی‌عنه اقدام به ${crimeName} نموده است.
+                        ${userStory ? `<br><br>توضیحات تکمیلی: ${userStory}` : ''}
+                    </p>
+
+                    <p><strong>مستند قانونی:</strong> ${legalArticle}</p>
+
+                    <p><strong>تقاضا:</strong> با عنایت به مراتب فوق، تعقیب و مجازات مشتکی‌عنه مورد استدعاست.</p>
+
+                    <div class="text-left mt-8 pt-4 border-t">
+                        <p>با تشکر و احترام</p>
+                        <p class="mt-4">امضاء شاکی: ____________</p>
+                        <p class="mt-2">تاریخ: ____________</p>
+                    </div>
+                </div>
+            `;
+
+        document.getElementById('complaint-content').innerHTML = complaintHTML;
+
+        // Generate Consultation
+        const consultationHTML = `
+                <div class="space-y-4">
+                    <h4 class="font-bold text-[#1A3A5F] flex items-center gap-2">
+                        <span>📚</span> توضیحات حقوقی
+                    </h4>
+
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p class="font-medium text-[#1A3A5F] mb-2">مستند قانونی شکایت شما:</p>
+                        <p class="text-sm">${legalArticle}</p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-[#1A3A5F] mb-2">مجازات قانونی:</p>
+                        <p class="text-sm text-gray-600">
+                            ${selectedCrime === 'khiyanat' ?
+            'حبس از شش ماه تا سه سال' :
+            selectedCrime === 'tohin' ?
+                'شلاق تا ۷۴ ضربه یا جزای نقدی' :
+                'حبس از یک تا شش ماه یا تا ۷۴ ضربه شلاق'
+        }
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-medium text-[#1A3A5F] mb-2">💡 نکات مهم:</p>
+                        <ul class="text-sm text-gray-600 space-y-2 list-disc list-inside">
+                            <li>شکواییه را به دفتر خدمات الکترونیک قضایی ببرید</li>
+                            <li>کارت ملی هوشمند همراه داشته باشید</li>
+                            <li>تمام مدارک و مستندات را پرینت بگیرید</li>
+                            <li>هزینه دادرسی را در همان دفتر پرداخت کنید</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <p class="font-medium text-[#27AE60] mb-2">✅ مراحل بعدی:</p>
+                        <ol class="text-sm text-gray-600 space-y-1 list-decimal list-inside">
+                            <li>مراجعه به دفتر خدمات الکترونیک قضایی</li>
+                            <li>ثبت شکواییه و دریافت شماره پرونده</li>
+                            <li>پیگیری از طریق سامانه ابلاغ الکترونیک</li>
+                        </ol>
+                    </div>
+                </div>
+            `;
+
+        document.getElementById('consultation-content').innerHTML = consultationHTML;
+    }
+
+    function downloadSection(section) {
+        const element = document.getElementById(section + '-content');
+        const title = section === 'complaint' ? 'شکواییه' : 'راهنما';
+
+        const opt = {
+            margin: 10,
+            filename: `${title}-آنیک.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // Clone element and add styles for PDF
+        const clone = element.cloneNode(true);
+        clone.style.direction = 'rtl';
+        clone.style.fontFamily = 'Vazirmatn, sans-serif';
+        clone.style.padding = '20px';
+        clone.style.background = 'white';
+
+        html2pdf().set(opt).from(clone).save();
+    }
+</script>
+</body>
+</html>
