@@ -3,20 +3,19 @@
 This document outlines the architectural principles, strict coding rules, and workflow standards for the Anic project. **Adherence is mandatory.**
 
 ## 1. Project Context
-- **Domain:** Business Process Management Software (BPMS)
-- **Stack:** Laravel 12 (Core), Hybrid Modular Architecture, Domain-Driven Design (DDD).
+- **Stack:** Laravel 12 (Core), Monolithic architecture
 - **Localization:** Persian (Jalali dates, RTL support). Enums must have a `label()` method for Persian output.
 - **Environment:** All commands **must** run via Docker:
   ```bash
-  docker exec anic_app php artisan [command]
-  docker exec anic_app composer [command]
+  docker exec anik_app php artisan [command]
+  docker exec anik_app composer [command]
   ```
 
 ## 2. Architecture & Request Flow
 **Pattern:** `Request → FormRequest → Mapper → DTO → Service → Entity → Transformer → Response`
 
 ### Module Structure
-- **Paths:** `app/Core/{Module}` (Core), `Modules/{Module}` (Pluggable), `Applications/{App}` (Presentation).
+- **Paths:** `app` (Core Monolithic).
 - **Key Directories:**
     - `Contracts/`, `Entities/` (Eloquent), `ValueObjects/` (Immutable), `Enums/`
     - `DTOs/` (Readonly), `Mappers/`, `Services/` (Logic)
@@ -35,6 +34,7 @@ This document outlines the architectural principles, strict coding rules, and wo
 - **Language:** English for all code, comments, and commit messages.
 - **JS/TS:** String literals must be assigned to `const` variables before use.
 - **Formatting:** PSR-12 via `standards/formatter/pint.json`. Single quotes, short arrays `[]`, trailing commas.
+- **Comments:** Code should be self-documenting. Comments explain **WHY, never WHAT or HOW**. Avoid obvious code, commented-out code, and bad naming explanations—fix naming instead.
 
 ### Data & Objects
 - **DTOs:** Constructor-based, readonly properties. **Only** `toArray()` method allowed.
@@ -43,7 +43,7 @@ This document outlines the architectural principles, strict coding rules, and wo
 
 ### Database
 - **Migrations:** **Two-phase** required for Foreign Keys (1. Create table with nullable columns, 2. Add constraints).
-- **Naming:** `{module_prefix}_{resource_plural}` (e.g., `core_org_users`).
+- **Naming:** `anik_{resource_plural}` (e.g., `anik_users`).
 - **Factories:** Use factories for test data generation.
 
 ### Security & Error Handling
@@ -51,13 +51,6 @@ This document outlines the architectural principles, strict coding rules, and wo
 - **Validation:** Use `EntityValidator` and `FormRequest`.
 - **Sanitization:** Blacklist sensitive fields in Transformers.
 - **Auth:** Sanctum (`Authorization: Bearer`).
-
-## 4. API Integration Standards
-- **Filtering:** `?filter[name]=val`, `?filter[price][gte]=100`
-- **Search:** `?search=term&searchFields=name,def`
-- **Sorting:** `?order_by=col&order_direction=desc`
-- **Pagination:** `?page=X&per_page=Y` (max 100)
-- **Includes:** `?includes=relation_a,relation_b`
 
 ---
 
@@ -140,20 +133,9 @@ Before presenting the final output, perform an internal review:
 
 ---
 
-## 6. Instructions Routing Map
+## 5. Instructions Routing Map
 
 > This index is the **source of truth** for Phase 2. Every matched file **must** be read before code generation.
-
-### Always-On Instructions
-
-These files are **always active** — they must be included in **every** Phase 2 retrieval without exception:
-
-| File | Reason |
-| :--- | :--- |
-| [comments.md](AI/instructions/guidelines/comments.md) | Comment policy applies to all code output |
-| [command-execution.md](AI/instructions/guidelines/command-execution.md) | Docker environment rules apply to all command execution |
-
----
 
 ### Review Mode Detection
 
@@ -161,12 +143,9 @@ If the task contains any of these keywords, activate **Review Mode**:
 
 | Keyword in Task | Review Type | Instructions to Load |
 | :--- | :--- | :--- |
-| "review", "check", "audit" | Code Review | [coding-standards.md](AI/instructions/guidelines/coding-standards.md) + instruction(s) matching the file type |
-| "refactor" | Refactor Review | [coding-standards.md](AI/instructions/guidelines/coding-standards.md) + instruction(s) for the relevant layer |
-
----
-
-### Complete Instruction Index
+| "review", "check", "audit" | Code Review | [cto.md](AI/instructions/cto.md) + instruction(s) matching the file type |
+| "review test", "test review" | Test Review | The matching `-review.md` file from the test section below |
+| "refactor" | Refactor Review | [cto.md](AI/instructions/cto.md) + [coding-standards.md](AI/instructions/coding/coding-standards.md) + instruction(s) for the relevant layer |
 
 ---
 
@@ -220,9 +199,17 @@ If the task contains any of these keywords, activate **Review Mode**:
 
 #### Coding Standards
 
-##### [coding-standards.md](AI/instructions/guidelines/coding-standards.md)
+##### [coding-standards.md](AI/instructions/coding/coding-standards.md)
 * **Trigger Condition:** Any PHP coding task, naming a class/method/variable, organizing code structure, or reviewing code quality.
 * **Purpose/Action:** PSR-12 compliance, 120-char line limit, meaningful names (PascalCase classes, camelCase methods/variables, UPPER_SNAKE_CASE constants, snake_case DB columns). Thin controllers delegate to services. Avoid hardcoded strings — use boolean flags or translation files. Remove unused code. Avoid immediate re-queries after updates; use `updateAndRefresh` patterns.
+
+---
+
+### Event System
+
+#### [event-listeners.md](AI/instructions/event-listeners.md)
+* **Trigger Condition:** Creating or editing Events, Listeners, or deciding between event-based and direct coupling for inter-module communication.
+* **Purpose/Action:** Event system standards: **intra-module event listeners are prohibited** (use direct calls within the same module). Events are only for inter-module communication. Fire Business Events for meaningful occurrences (even without current listeners). Listeners should be lightweight orchestrators — delegate business logic to services. Prefer event-based communication over direct service calls between modules for loose coupling.
 
 ---
 
